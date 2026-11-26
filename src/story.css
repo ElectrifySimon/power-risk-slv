@@ -21,7 +21,7 @@
 .art-layer svg{width:100%;height:100%;display:block}
 .s-hero::before{content:"";position:absolute;inset:0;z-index:2;pointer-events:none;background:
   linear-gradient(90deg,#071627 34%,rgba(7,22,39,.94) 52%,rgba(7,22,39,.34) 72%,rgba(7,22,39,0) 88%),
-  linear-gradient(180deg,rgba(7,22,39,.5),transparent 22%,transparent 62%,rgba(7,22,39,.85) 96%)}
+  linear-gradient(180deg,rgba(7,22,39,.55),rgba(7,22,39,.12) 34%,transparent 58%,rgba(7,22,39,.88) 96%)}
 .hero-copy{z-index:4}
 .s-eyebrow{font:600 13.5px Inter,sans-serif;letter-spacing:.18em;text-transform:uppercase;color:#BCE0FF;margin:0 0 22px}
 .s-hero h1{font:700 clamp(42px,6.4vw,94px)/0.98 Montserrat,sans-serif;letter-spacing:-.03em;margin:0;max-width:9ch;color:#fff}
