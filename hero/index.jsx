@@ -69,9 +69,15 @@ function drawBand(el) {
   svg.style.width = "100%";
   svg.style.height = "100%";
   svg.innerHTML = "";
-  const range = document.createRange();
-  range.selectNodeContents(el);
-  [...range.getClientRects()].forEach((r, i) => {
+  // measure text nodes only: the band svg lives inside the heading
+  const rects = [];
+  [...el.childNodes].forEach((node) => {
+    if (node.nodeType !== 3) return;
+    const range = document.createRange();
+    range.selectNodeContents(node);
+    rects.push(...range.getClientRects());
+  });
+  rects.forEach((r, i) => {
     if (r.width < 4) return;
     const x = r.left - box.left - 4;
     const y = r.top - box.top + 2;
