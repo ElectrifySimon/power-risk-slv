@@ -109,9 +109,9 @@ select,input[type=search]{font:400 13.5px Inter,sans-serif;color:var(--ink);back
 
 /* ---------- tab row ---------- */
 .tabrow{display:flex;align-items:center;gap:14px;margin:38px 0 0;border-bottom:1px solid var(--line)}
-.tabs{display:flex;gap:2px;margin-right:auto;overflow:auto;min-width:0;scrollbar-width:thin}
+.tabs{display:flex;gap:2px;margin-right:auto;min-width:0;flex-wrap:wrap;overflow:visible}
 .tab{border:0;background:none;font:600 14px Inter,sans-serif;color:var(--muted);padding:13px 14px;cursor:pointer;
-  border-bottom:2px solid transparent;margin-bottom:-1px;white-space:nowrap}
+  border-bottom:2px solid transparent;margin-bottom:-1px;white-space:nowrap;flex:0 0 auto}
 .tab:hover{color:var(--ink)}
 .tab[aria-selected=true]{color:var(--ink);border-bottom-color:var(--brand)}
 .btn{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);background:var(--surface);color:var(--ink);

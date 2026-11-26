@@ -44,3 +44,8 @@ Notes:
 - KPI cards carry an icon beside the label, a share bar under the value, darker context text.
 - Responsive: no document overflow at 390 / 768 / 1024 / 1440. Charts re-fit on container resize through ResizeObserver plus a deferred redraw after activation (fixed 100px-wide canvases on mobile).
 - Hero: country art fits the frame, copy centred, scroll cue moved into the text column.
+
+## 2026-11-26 tab row scrollbar
+- Symptom: a vertical scrollbar in the dashboard tab row (Risk results / Measures / Method / Register).
+- Cause: `.tabs` used `overflow:auto` with `.tab{margin-bottom:-1px}`, so the strip had 1px of vertical overflow and Chromium drew a scrollbar.
+- Fix: no scroll container. `.tabs` is `flex-wrap:wrap; overflow:visible`; at 390px the tabs wrap to two rows with no horizontal overflow. Active underline sits on the rule again.
