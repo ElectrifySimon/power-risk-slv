@@ -1,10 +1,6 @@
 /* Story: dark act, sticky visuals, layered parallax. */
 
 .story{position:relative;background:#071627;color:#E9F1F8;overflow-x:clip}
-.story-fx{position:fixed;inset:0;width:100vw;height:100vh;z-index:0;pointer-events:none}
-.story-fx .topography-container{width:100vw;height:100vh}
-.story::before{content:"";position:fixed;inset:0;z-index:1;pointer-events:none;
-  background:linear-gradient(180deg,rgba(7,22,39,.16),rgba(7,22,39,.34) 55%,rgba(7,22,39,.46))}
 .s-hero,.scrolly,.s-cta{position:relative;z-index:2}
 .story .wrap{position:relative;z-index:3;width:100%}
 .s-mast{display:flex;align-items:center;gap:14px;padding:26px 0 0;position:relative;z-index:6}
@@ -161,8 +157,5 @@
 .vlegend .vlg-note{color:rgba(233,241,248,.5);font-weight:400}
 
 /* ---------- dashboard shape grid + text highlights ---------- */
-.dash-fx{position:fixed;inset:0;width:100vw;height:100vh;z-index:0;pointer-events:none;opacity:0;transition:opacity .7s ease}
-.dash-fx .shape-grid{width:100vw;height:100vh}
-body.dashmode .dash-fx{opacity:1}
-body.dashmode #story{display:none}
+body.dashmode body.dashmode #story{display:none}
 [data-hl]{position:relative;color:inherit}

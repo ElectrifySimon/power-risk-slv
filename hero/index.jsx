@@ -1,75 +1,11 @@
 import React from "react";
 import { createRoot } from "react-dom/client";
-import Topography from "./Topography.jsx";
-import ShapeGrid from "./ShapeGrid.jsx";
+import { annotate } from "rough-notation";
 import { Highlighter } from "./Highlighter.tsx";
 
-const bg = document.getElementById("bgfx-root");
-if (bg) {
-  createRoot(bg).render(
-    <Topography
-      color="#7FB4DC"
-      lineCount={26}
-      lineWidth={1.15}
-      majorLines
-      elevation={1.15}
-      foreground={0.3}
-      scale={1.05}
-      detail={0.42}
-      tilt={36}
-      speed={0.18}
-      direction="forward"
-      morph={0.26}
-      glow={0.7}
-      depthOfField={0.45}
-      fog={0.42}
-      brightness={1.35}
-      opacity={1}
-      mouseInteraction
-      hoverEffect="lift"
-      mouseRadius={1}
-      mouseStrength={0.5}
-      trail={0.3}
-      parallax={0.45}
-      markers="none"
-      intro
-      lightMode={false}
-    />
-  );
-}
+const BLUE = "#8EC5FF";
 
-const dash = document.createElement("div");
-dash.className = "dash-fx";
-dash.setAttribute("aria-hidden", "true");
-document.body.appendChild(dash);
-createRoot(dash).render(
-  <ShapeGrid
-    shape="square"
-    cellSize={64}
-    lineWidth={1}
-    direction="diagonal"
-    speed={0.22}
-    lineColor="rgba(0,115,171,0.22)"
-    hoverColor="#0073AB"
-    fillOpacity={0.05}
-    radius={2}
-    trail={0.55}
-    glow={0.22}
-    twinkle={0.1}
-    fade={0.9}
-    clickCascade={false}
-    intro
-    opacity={1}
-    backgroundColor="transparent"
-  />
-);
-
-window.addEventListener("load", () => {
-  window.dispatchEvent(new Event("resize"));
-  setTimeout(() => window.dispatchEvent(new Event("resize")), 400);
-  setTimeout(() => window.dispatchEvent(new Event("resize")), 1400);
-});
-
+// Inline phrases: the MagicUI Highlighter component itself.
 document.querySelectorAll("[data-hl]").forEach((el) => {
   const text = el.textContent;
   const action = el.getAttribute("data-hl") || "highlight";
@@ -80,3 +16,27 @@ document.querySelectorAll("[data-hl]").forEach((el) => {
     </Highlighter>
   );
 });
+
+// Whole blocks: same rough-notation engine the Highlighter wraps.
+function annotateBlock(el, action, color) {
+  if (!el || el.dataset.annotated) return;
+  el.dataset.annotated = "1";
+  const a = annotate(el, {
+    type: action,
+    color,
+    strokeWidth: action === "underline" ? 1.25 : 1.5,
+    animationDuration: 900,
+    iterations: 1,
+    padding: action === "underline" ? 2 : 6,
+    multiline: true,
+  });
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach((e) => {
+      if (e.isIntersecting) { a.show(); io.disconnect(); }
+    });
+  }, { rootMargin: "-12% 0px -12% 0px" });
+  io.observe(el);
+}
+
+document.querySelectorAll(".s-step h3, .s-cta h2").forEach((el) => annotateBlock(el, "highlight", "rgba(0,115,171,0.34)"));
+document.querySelectorAll(".s-step p, .s-hero .s-stand, .s-cta p").forEach((el) => annotateBlock(el, "underline", "rgba(142,197,255,0.6)"));
