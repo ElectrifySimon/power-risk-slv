@@ -48,7 +48,7 @@ a:hover{text-decoration:underline}
 .mast .edition{font:500 12px/1 Inter,sans-serif;letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
 
 /* ---------- hero ---------- */
-.hero{display:grid;grid-template-columns:1.5fr .95fr;gap:48px;align-items:end;padding:44px 0 34px}
+.hero{display:grid;grid-template-columns:1.52fr .88fr;gap:48px;align-items:start;padding:44px 0 34px}
 .eyebrow{font:600 11.5px/1 Inter,sans-serif;letter-spacing:.16em;text-transform:uppercase;color:var(--brand);margin:0 0 16px}
 h1{font:700 clamp(38px,4.5vw,58px)/1.02 Montserrat,sans-serif;letter-spacing:-.022em;margin:0}
 .standfirst{font-size:19px;line-height:1.55;color:var(--ink2);margin:20px 0 0;max-width:56ch}
@@ -56,11 +56,12 @@ h1{font:700 clamp(38px,4.5vw,58px)/1.02 Montserrat,sans-serif;letter-spacing:-.0
 
 .kpis{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .kpi{background:var(--surface);border-radius:var(--radius);padding:14px 15px 15px;box-shadow:var(--e1),inset 0 0 0 1px rgba(21,35,48,.035)}
-.kpi .v{font:700 30px/1.05 Montserrat,sans-serif;letter-spacing:-.02em;margin:0 0 6px}
+.kpi .v{font:700 27px/1.05 Montserrat,sans-serif;letter-spacing:-.02em;margin:0 0 7px}
 .kpi .l{font:600 11px/1.35 Inter,sans-serif;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin:0}
-.kpi .c{font-size:12px;line-height:1.35;color:var(--muted);margin:6px 0 0}
+.kpi .c{font-size:12px;line-height:1.35;color:var(--muted);margin:7px 0 0;display:flex;align-items:baseline;gap:6px;flex-wrap:wrap}
+.delta{font-weight:600;color:var(--brand);white-space:nowrap}
 .kpi .c b{color:var(--brand);font-weight:600}
-.kpinote{grid-column:1/-1;font-size:12px;color:var(--muted);margin:2px 0 0}
+.kpinote{grid-column:1/-1;font-size:12px;line-height:1.4;color:var(--muted);margin:6px 0 0}
 
 /* ---------- map ---------- */
 .mapcard{position:relative;display:grid;grid-template-columns:1.52fr .88fr;background:var(--surface);
@@ -71,9 +72,9 @@ h1{font:700 clamp(38px,4.5vw,58px)/1.02 Montserrat,sans-serif;letter-spacing:-.0
 .dept{fill:transparent;stroke:#B9CBD9;stroke-width:.9;transition:fill .18s}
 .dept:hover{fill:rgba(255,255,255,.30)}
 .mapview .sea{font:400 11px Inter,sans-serif;fill:#8AA2B4;font-style:italic}
-.mapview .neighbour{font:500 10.5px Inter,sans-serif;fill:#9CAFBE;letter-spacing:.08em;text-transform:uppercase}
-.mapview .region{font:700 11px Inter,sans-serif;fill:#5C7183;letter-spacing:.14em}
-.mapview .capt{font:700 10.5px Inter,sans-serif;fill:#22323F;letter-spacing:.02em}
+.mapview .neighbour{font:600 10.5px Inter,sans-serif;fill:#7C91A4;letter-spacing:.1em;text-transform:uppercase}
+.mapview .region{font:700 11.5px Inter,sans-serif;fill:#2B3F4E;letter-spacing:.14em;paint-order:stroke;stroke:#F2F7FB;stroke-width:3px;stroke-linejoin:round}
+.mapview .capt{font:700 10.5px Inter,sans-serif;fill:#152330;letter-spacing:.02em;paint-order:stroke;stroke:#fff;stroke-width:3px}
 .mapview .dot{fill:#152330;stroke:#fff;stroke-width:1.6}
 .mapside{padding:26px 26px 22px;display:flex;flex-direction:column;gap:14px;background:var(--surface);border-left:1px solid var(--line)}
 .mapside h2{font:600 21px/1.25 Montserrat,sans-serif;margin:0;letter-spacing:-.01em}
@@ -87,6 +88,9 @@ h1{font:700 clamp(38px,4.5vw,58px)/1.02 Montserrat,sans-serif;letter-spacing:-.0
 .fine{font-size:11px;line-height:1.45;color:#5F6E7D;margin:0}
 .maplabel{position:absolute;z-index:4;font:600 11px Inter,sans-serif;background:rgba(21,35,48,.88);color:#fff;padding:4px 8px;border-radius:6px;pointer-events:none;opacity:0;transition:opacity .12s}
 .maplabel.on{opacity:1}
+.mapscale{position:absolute;z-index:3;right:16px;bottom:14px;display:flex;align-items:center;gap:8px;
+  background:rgba(255,255,255,.86);padding:6px 9px;border-radius:8px;box-shadow:var(--e1);font:500 10px Inter,sans-serif;color:var(--muted)}
+.mapscale i{display:block;width:88px;height:8px;border-radius:2px;background:linear-gradient(90deg,#EAF2F8,#8FB9D6,#2C7CAA)}
 
 /* ---------- controls ---------- */
 .seg{display:inline-flex;gap:2px;background:var(--surface2);padding:3px;border-radius:11px}
@@ -133,7 +137,7 @@ select,input[type=search]{font:400 13.5px Inter,sans-serif;color:var(--ink);back
 .grp{font:600 10.5px Inter,sans-serif;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);
   border-top:1px solid var(--line);padding:16px 0 6px;margin-top:8px}
 .grp:first-child{border-top:0;padding-top:0}
-.row{display:grid;grid-template-columns:206px 1fr;gap:18px;align-items:center;padding:6px 0}
+.row{display:grid;grid-template-columns:206px 1fr 58px;gap:16px;align-items:center;padding:6px 0}
 .rl{display:flex;align-items:center;gap:9px;font-size:13.5px;color:var(--ink)}
 .rl .ic{width:17px;height:17px;color:var(--muted);flex:0 0 auto}
 .rl .nm{display:flex;flex-direction:column;line-height:1.25}
@@ -141,14 +145,16 @@ select,input[type=search]{font:400 13.5px Inter,sans-serif;color:var(--ink);back
 .bars{display:flex;flex-direction:column;gap:5px}
 .bl{display:grid;grid-template-columns:76px 1fr;gap:10px;align-items:center}
 .pl{font:500 11px Inter,sans-serif;color:var(--muted);letter-spacing:.02em}
-.bar{height:15px;border-radius:4px;overflow:hidden;display:flex;background:var(--surface2)}
-.seg-b{height:100%;display:flex;align-items:center;justify-content:center;font:600 10px Inter,sans-serif;
+.bar{height:16px;border-radius:4px;overflow:hidden;display:flex;background:#E3EAF1}
+.seg-b{height:100%;display:flex;align-items:center;justify-content:center;font:600 9.5px Inter,sans-serif;
   transition:filter .12s;cursor:default}
 .seg-b:hover{filter:brightness(1.06)}
 .seg-b.low{color:var(--ink2)}
 .seg-b.mod{color:#22323F}
 .seg-b.high{color:#fff}
 .seg-b.crit{color:#fff}
+.hc{text-align:right;font:600 13px Inter,sans-serif;color:var(--ink)}
+.hc small{display:block;font:400 10px Inter,sans-serif;color:var(--muted);letter-spacing:.04em}
 .note{font-size:12px;color:var(--muted);margin:16px 0 0}
 
 /* measures */
@@ -187,7 +193,8 @@ input[type=range]{width:100%;accent-color:var(--brand)}
 .scale{display:flex;justify-content:space-between;font-size:11px;color:var(--muted)}
 
 /* register */
-.tblwrap{max-height:560px;overflow:auto;border:1px solid var(--line);border-radius:12px;margin-top:6px}
+.tblwrap{position:relative;max-height:560px;overflow:auto;border:1px solid var(--line);border-radius:12px;margin-top:6px;
+  background:linear-gradient(to bottom,transparent calc(100% - 22px),rgba(21,35,48,.05))}
 table.tbl{width:100%;border-collapse:separate;border-spacing:0;font-size:13px}
 .tbl thead th{position:sticky;top:0;background:var(--surface2);z-index:2;text-align:left;font:600 11px Inter,sans-serif;
   letter-spacing:.07em;text-transform:uppercase;color:var(--muted);padding:10px 12px;border-bottom:1px solid var(--line);
@@ -198,7 +205,7 @@ table.tbl{width:100%;border-collapse:separate;border-spacing:0;font-size:13px}
 .tbl td.num{text-align:right;font-variant-numeric:tabular-nums;color:var(--ink)}
 .tbl tr:hover td{background:#FAFCFE}
 .tbl .cls{display:inline-flex;align-items:center;gap:7px}
-.tbl .cls i{width:9px;height:9px;border-radius:3px;display:inline-block}
+.tbl .cls i{width:10px;height:10px;border-radius:3px;display:inline-block;box-shadow:inset 0 0 0 1px rgba(21,35,48,.14)}
 .tbl .none{color:#8A99A7}
 .tblbar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:0 0 12px}
 .tblbar .count{font-size:12.5px;color:var(--muted);margin-left:auto}

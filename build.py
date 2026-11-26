@@ -12,7 +12,7 @@ import os
 import re
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
-W, H, PAD = 1000, 560, 34
+W, H, PAD_X, PAD_Y = 1000, 560, 88, 46
 LAT0 = 13.8
 
 GRAD = {
@@ -45,9 +45,9 @@ def load_geo():
     xs = [p[0] * k for p in pts_all]
     ys = [p[1] for p in pts_all]
     minx, maxx, miny, maxy = min(xs), max(xs), min(ys), max(ys)
-    s = min((W - 2 * PAD) / (maxx - minx), (H - 2 * PAD) / (maxy - miny))
-    ox = PAD + ((W - 2 * PAD) - (maxx - minx) * s) / 2
-    oy = PAD + ((H - 2 * PAD) - (maxy - miny) * s) / 2
+    s = min((W - 2 * PAD_X) / (maxx - minx), (H - 2 * PAD_Y) / (maxy - miny))
+    ox = PAD_X + ((W - 2 * PAD_X) - (maxx - minx) * s) / 2
+    oy = PAD_Y + ((H - 2 * PAD_Y) - (maxy - miny) * s) / 2
 
     def proj(lon, lat):
         return (ox + (lon * k - minx) * s, oy + (maxy - lat) * s)
@@ -66,9 +66,9 @@ def load_geo():
     depts.sort(key=lambda d: d["n"])
 
     labels = [
-        {"c": "neighbour", "x": round(proj(-90.20, 14.36)[0]), "y": round(proj(-90.20, 14.36)[1]), "t": "Guatemala"},
-        {"c": "neighbour", "x": round(proj(-87.80, 14.30)[0]), "y": round(proj(-87.80, 14.30)[1]), "t": "Honduras"},
-        {"c": "sea", "x": round(proj(-89.55, 13.02)[0]), "y": round(proj(-89.55, 13.02)[1]), "t": "Pacific Ocean", "anchor": "middle"},
+        {"c": "neighbour", "x": round(proj(-90.16, 14.10)[0]), "y": round(proj(-90.16, 14.10)[1]), "t": "Guatemala", "anchor": "end"},
+        {"c": "neighbour", "x": round(proj(-87.66, 13.92)[0]), "y": round(proj(-87.66, 13.92)[1]), "t": "Honduras", "anchor": "start"},
+        {"c": "sea", "x": round(proj(-89.45, 13.06)[0]), "y": round(proj(-89.45, 13.06)[1]), "t": "Pacific Ocean", "anchor": "middle"},
     ]
     regions = [
         {"t": "WEST", "x": round(proj(-89.78, 13.92)[0]), "y": round(proj(-89.78, 13.92)[1])},
@@ -112,8 +112,11 @@ def main():
     data["build"] = datetime.datetime.now(datetime.timezone.utc).strftime("%-d %B %Y")
 
     css = fonts_css(open(os.path.join(ROOT, "src", "page.css"), encoding="utf-8").read())
+    css += open(os.path.join(ROOT, "src", "story.css"), encoding="utf-8").read()
+    story_html = open(os.path.join(ROOT, "src", "story.html"), encoding="utf-8").read()
     body = open(os.path.join(ROOT, "src", "page.html"), encoding="utf-8").read()
     js = open(os.path.join(ROOT, "src", "app.js"), encoding="utf-8").read()
+    js2 = open(os.path.join(ROOT, "src", "story.js"), encoding="utf-8").read()
     sprite = icon_sprite()
 
     html = f"""<!DOCTYPE html>
@@ -126,12 +129,18 @@ def main():
 <style>{css}</style>
 </head>
 <body>
+<section id="story" class="story">
+{story_html}
+</section>
+<div id="app" class="app">
 {body}
+</div>
 <script>
 var DATA = {json.dumps(data, ensure_ascii=False, separators=(",", ":"))};
 document.getElementById("sprite").innerHTML = {json.dumps(sprite)};
 </script>
 <script>{js}</script>
+<script>{js2}</script>
 </body>
 </html>
 """

@@ -5,7 +5,7 @@
       PER = DATA.PER, CATS = DATA.CATS, MEAS = DATA.MEAS, DEF = DATA.DEF, GEO = DATA.GEO;
 
   var CLS = ["low", "mod", "high", "crit"];
-  var COL = { low: "#DCE4EC", mod: "#9DB4CB", high: "#0073AB", crit: "#B03218" };
+  var COL = { low: "#E1E9F1", mod: "#A9C0D5", high: "#0073AB", crit: "#B03218" };
   var HAZCOL = { flood: "#0073AB", drought: "#8A6A3A", heat: "#B03218" };
   var ICON = { hydro: "i-hydropower", solar: "i-solar", geo: "i-geothermal", wind: "i-wind", biomass: "i-bioenergy", biogas: "i-bioenergy" };
 
@@ -76,7 +76,10 @@
   function paintMap() {
     var wash = $(".wash", $("#mapview"));
     wash.setAttribute("fill", "url(#g-" + S.haz + ")");
-    wash.setAttribute("opacity", S.per === "s" ? "0.42" : "0.85");
+    wash.setAttribute("opacity", S.per === "s" ? "0.42" : "0.8");
+    var ramp = $("#mapramp"), g = GEO.grad[S.haz];
+    if (ramp) ramp.style.background = "linear-gradient(" +
+      (S.haz === "heat" ? "180deg" : "90deg") + "," + g.stops.join(",") + ")";
   }
 
   /* ---------- KPIs ---------- */
@@ -92,20 +95,20 @@
   function renderKPIs() {
     var h = S.haz, gen = ASSETS.filter(function (a) { return a.g === "gen"; }).map(function (a) { return a.id; });
     var defs = [
-      ["Generation assets at high or critical risk", gen, N],
-      ["Generation capacity at high or critical risk", gen, MWt],
-      ["Substations at high or critical risk", ["tsub", "dsub"], N],
-      ["Transmission towers at high or critical risk", ["tower"], N]
+      ["Generation assets", gen, N],
+      ["Generation capacity", gen, MWt],
+      ["Substations", ["tsub", "dsub"], N],
+      ["Transmission towers", ["tower"], N]
     ];
     var box = $("#kpis"); box.innerHTML = "";
     defs.forEach(function (d) {
       var a = share(h, "s", d[1], d[2]), b = share(h, "m", d[1], d[2]);
       var v, c;
-      if (S.per === "s") { v = fp(a); c = PER.s; }
+      if (S.per === "s") { v = fp(a); c = "high or critical, " + PER.s; }
       else {
         v = fp(b);
         var diff = Math.round(b) - Math.round(a);
-        c = PER.m + ' <b>' + (diff === 0 ? "level with " : (diff > 0 ? "up " + Math.abs(diff) + " points from " : "down " + Math.abs(diff) + " points from ")) + fp(a) + "</b> " + PER.s;
+        c = '<span class="delta">' + (diff === 0 ? "no change" : (diff > 0 ? "+" + diff : diff) + " pts") + "</span> vs " + fp(a) + " in " + PER.s;
       }
       var el = document.createElement("div");
       el.className = "kpi";
@@ -116,7 +119,8 @@
     ASSETS.forEach(function (a) { total += sum(N.flood.s[a.id] || [0, 0, 0, 0]); });
     var note = document.createElement("p");
     note.className = "kpinote";
-    note.innerHTML = HAZ[h].name + " hazard &middot; " + (S.per === "s" ? PER.s : PER.m) + " &middot; " + fmtN(total) + " assets assessed across 11 types";
+    note.innerHTML = "Share at high or critical risk &middot; " + HAZ[h].name.toLowerCase() + " &middot; " +
+      (S.per === "s" ? PER.s : PER.m) + " &middot; " + fmtN(total) + " assets across " + ASSETS.length + " types";
     box.appendChild(note);
   }
 
@@ -125,9 +129,9 @@
     var h = S.haz, tab = S.met === "n" ? N : MWt;
     var pers = S.per === "c" ? ["s", "m"] : [S.per];
     $("#chart-note").innerHTML = (S.met === "n"
-      ? "Share of assets in each risk category, by asset type."
-      : "Share of installed and planned capacity in each risk category. Capacity applies to generation assets only.") +
-      " Hover a segment for the exact count.";
+      ? "Share of assets in each risk category, by asset type. "
+      : "Share of installed and planned capacity in each risk category, generation only. ") +
+      "Sorted by share at high or critical risk. Hover a segment for the exact count.";
 
     var lg = $("#legend"); lg.innerHTML = "";
     CATS.forEach(function (c, i) {
@@ -146,8 +150,10 @@
         return pers.some(function (p) { return sum(tab[h][p][a.id] || []); });
       });
       rowset.sort(function (x, y) {
-        var sx = sum(tab[h][pers[0]][x.id] || []), sy = sum(tab[h][pers[0]][y.id] || []);
-        return pct(hc(tab[h][pers[0]][y.id] || [0, 0, 0, 0]), sy) - pct(hc(tab[h][pers[0]][x.id] || [0, 0, 0, 0]), sx);
+        var ax = tab[h][pers[0]][x.id] || [], ay = tab[h][pers[0]][y.id] || [];
+        var d = pct(hc(ay), sum(ay)) - pct(hc(ax), sum(ax));
+        if (Math.abs(d) > 0.01) return d;
+        return sum(ay) - sum(ax);
       });
 
       var gd = document.createElement("div");
@@ -159,6 +165,8 @@
         var t0 = sum(tab[h][pers[0]][a.id] || []), unit = S.met === "n" ? (t0 === 1 ? "asset" : "assets") : "MW";
         var row = document.createElement("div"); row.className = "row";
         var icon = ICON[a.id] ? '<svg class="ic" aria-hidden="true"><use href="#' + ICON[a.id] + '"></use></svg>' : "";
+        var hid = tab[h][pers[pers.length - 1]][a.id] || [0, 0, 0, 0];
+        var hshare = fp(pct(hc(hid), sum(hid)));
         row.innerHTML = '<div class="rl">' + icon + '<span class="nm">' + a.name +
           "<small>" + (S.met === "n" ? fmtN(t0) : fmtMW(t0)) + " " + unit + (a.note ? " &middot; " + a.note : "") + "</small></span></div>";
         var bars = document.createElement("div"); bars.className = "bars";
@@ -174,7 +182,7 @@
             seg.className = "seg-b " + CLS[i];
             seg.style.width = w + "%";
             seg.style.background = COL[CLS[i]];
-            if (w >= 8) seg.textContent = fp(w);
+            if (w >= 12) seg.textContent = fp(w);
             seg.setAttribute("title",
               a.name + " \u00B7 " + PER[p] + " \u00B7 " + CATS[i] + " risk: " +
               (S.met === "n" ? fmtN(v) + " " + (v === 1 ? "asset" : "assets") : fmtMW(v) + " MW") + " (" + fp(w) + ")");
@@ -184,6 +192,10 @@
           bars.appendChild(line);
         });
         row.appendChild(bars);
+        var hcbox = document.createElement("div");
+        hcbox.className = "hc";
+        hcbox.innerHTML = hshare + "<small>high + crit.</small>";
+        row.appendChild(hcbox);
         ch.appendChild(row);
       });
     });
@@ -209,16 +221,17 @@
     $("#maptitle").textContent = "Where " + HAZ[h].name.toLowerCase() + " grow";
 
     var groups = [
-      ["Generation assets", genIds, N],
-      ["Substations", ["tsub", "dsub"], N],
-      ["Transmission towers", ["tower"], N]
+      ["Generation assets", genIds],
+      ["Substations", ["tsub", "dsub"]],
+      ["Transmission towers", ["tower"]]
     ];
     var mini = $("#mini"); mini.innerHTML = "";
     groups.forEach(function (g) {
-      var s = Math.round(share(h, p, g[1], g[2]));
+      var at = 0, hi = 0;
+      g[1].forEach(function (id) { var a = N[h][p][id] || []; at += sum(a); hi += hc(a); });
       var d = document.createElement("div"); d.className = "m";
-      d.innerHTML = '<span class="n">' + g[0] + '</span><span class="p">' + s + "%</span>" +
-        '<div class="bar"><div style="width:' + s + '%;background:' + HAZCOL[h] + '"></div></div>';
+      d.innerHTML = '<span class="n">' + g[0] + '</span><span class="p">' + fmtN(hi) + " of " + fmtN(at) + "</span>" +
+        '<div class="bar"><div style="width:' + pct(hi, at) + '%;background:' + HAZCOL[h] + '"></div></div>';
       mini.appendChild(d);
     });
     var cap = document.createElement("p");
@@ -347,7 +360,7 @@
             var mw = MWt[h][p][a.id] ? MWt[h][p][a.id][i] : null;
             if (!arr[i] && !mw) continue;
             ROWS.push({
-              group: a.g === "gen" ? "Generation" : "Transmission and distribution",
+              group: a.g === "gen" ? "Generation" : "Transmission and distribution", grpk: a.g,
               asset: a.name, haz: HAZ[h].name, hazk: h, per: PER[p], perk: p,
               cls: CATS[i], clsi: i, n: arr[i], mw: mw
             });
@@ -360,9 +373,12 @@
   function renderRegister() {
     var q = ($("#q").value || "").toLowerCase().trim();
     var fh = $("#f-haz").value, fp2 = $("#f-per").value;
+    var fg = $("#f-grp").value, fc = $("#f-cls").value;
     var rows = ROWS.filter(function (r) {
       if (fh !== "all" && r.hazk !== fh) return false;
       if (fp2 !== "all" && r.perk !== fp2) return false;
+      if (fg !== "all" && r.grpk !== fg) return false;
+      if (fc !== "all" && String(r.clsi) !== fc) return false;
       if (!q) return true;
       return (r.group + " " + r.asset + " " + r.haz + " " + r.per + " " + r.cls).toLowerCase().indexOf(q) >= 0;
     });
@@ -379,11 +395,11 @@
       tr.innerHTML = "<td>" + r.group.replace("Transmission and distribution", "T&amp;D") + "</td><td>" + r.asset + "</td><td>" + r.haz +
         "</td><td>" + r.per + '</td><td><span class="cls"><i style="background:' + COL[CLS[r.clsi]] + '"></i>' + r.cls + "</span></td>" +
         '<td class="num">' + (r.n ? fmtN(r.n) : '<span class="none">0</span>') + "</td>" +
-        '<td class="num">' + (r.mw == null ? '<span class="none">&ndash;</span>' : fmtMW(r.mw)) + "</td>";
+        '<td class="num">' + (r.mw == null ? '<span class="none">n/a</span>' : fmtMW(r.mw)) + "</td>";
       frag.appendChild(tr);
     });
     tb.appendChild(frag);
-    $("#rcount").textContent = rows.length + " rows";
+    $("#rcount").textContent = "Showing all " + rows.length + " rows";
     window.__EXPORT_ROWS = rows;
   }
   function csv() {
@@ -410,7 +426,7 @@
       b.setAttribute("aria-selected", b.dataset.view === view);
     });
     if (view === "register" && !$("#reg tbody").children.length) renderRegister();
-    try { history.replaceState(null, "", "#" + view); } catch (e) { }
+    try { history.replaceState(null, "", "#dashboard"); } catch (e) { }
   }
 
   function segment(sel, opts, key, onchange) {
@@ -452,10 +468,20 @@
   $("#q").oninput = renderRegister;
   $("#f-haz").onchange = renderRegister;
   $("#f-per").onchange = renderRegister;
+  $("#f-grp").onchange = renderRegister;
+  $("#f-cls").onchange = renderRegister;
+  var thN = document.querySelector('#reg thead th[data-k="n"]');
+  if (thN) { thN.setAttribute("aria-sort", "descending"); thN.textContent = thN.textContent + " \u25BC"; }
   Array.prototype.forEach.call(document.querySelectorAll("#reg thead th"), function (th) {
     th.onclick = function () {
       var k = th.dataset.k;
       if (RS.key === k) RS.dir *= -1; else { RS.key = k; RS.dir = (k === "n" || k === "mw" || k === "cls") ? -1 : 1; }
+      Array.prototype.forEach.call(document.querySelectorAll("#reg thead th"), function (x) {
+        x.removeAttribute("aria-sort");
+        x.textContent = x.textContent.replace(/\s*[\u25B2\u25BC]$/, "");
+      });
+      th.setAttribute("aria-sort", RS.dir === 1 ? "ascending" : "descending");
+      th.textContent = th.textContent + (RS.dir === 1 ? " \u25B2" : " \u25BC");
       renderRegister();
     };
   });

@@ -5,6 +5,7 @@
   <span class="sep" aria-hidden="true"></span>
   <span class="org">El Salvador &middot; Power sector</span>
   <div class="right">
+    <button class="back" id="to-story" type="button">&larr; Story</button>
     <span class="edition">Climate risk assessment &middot; 2026</span>
   </div>
 </header>
@@ -27,6 +28,7 @@
     </div>
     <div class="mapview" id="mapview">
       <div class="maplabel" id="maplabel"></div>
+      <div class="mapscale" aria-hidden="true"><span>Less change</span><i id="mapramp"></i><span>More change</span></div>
     </div>
     <div class="mapside">
       <h2 id="maptitle">Where floods grow</h2>
@@ -123,7 +125,12 @@
       <h2>Asset register</h2>
       <p class="lede">Every asset group, hazard and period in the assessment, with the number of assets and the installed capacity in each risk class. Capacity applies to generation assets only.</p>
       <div class="tblbar">
-        <input type="search" id="q" placeholder="Search asset, hazard or class" aria-label="Search the register">
+        <input type="search" id="q" placeholder="Search" aria-label="Search the register">
+        <select id="f-grp" aria-label="Filter by asset group">
+          <option value="all">All groups</option>
+          <option value="gen">Generation</option>
+          <option value="grid">Transmission and distribution</option>
+        </select>
         <select id="f-haz" aria-label="Filter by hazard">
           <option value="all">All hazards</option>
           <option value="flood">Floods</option>
@@ -135,10 +142,17 @@
           <option value="s">2015&ndash;2044</option>
           <option value="m">2041&ndash;2070</option>
         </select>
+        <select id="f-cls" aria-label="Filter by risk class">
+          <option value="all">All risk classes</option>
+          <option value="0">Low</option>
+          <option value="1">Moderate</option>
+          <option value="2">High</option>
+          <option value="3">Critical</option>
+        </select>
         <button class="btn" id="dl-reg" type="button">Download CSV</button>
         <span class="count" id="rcount"></span>
       </div>
-      <div class="tblwrap">
+      <div class="tblwrap" id="tblwrap">
         <table class="tbl" id="reg">
           <thead><tr>
             <th data-k="group">Group</th>
@@ -152,6 +166,7 @@
           <tbody></tbody>
         </table>
       </div>
+      <p class="note">The two assessment windows overlap between 2041 and 2044 by design. Capacity applies to generation assets only; n/a marks asset groups where capacity is not reported.</p>
     </div>
   </section>
 
