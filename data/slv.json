@@ -1,0 +1,1180 @@
+{
+ "N": {
+  "flood": {
+   "s": {
+    "biogas": [
+     2,
+     0,
+     4,
+     0
+    ],
+    "bsh": [
+     1,
+     0,
+     0,
+     0
+    ],
+    "biomass": [
+     4,
+     0,
+     2,
+     0
+    ],
+    "fossil": [
+     11,
+     1,
+     6,
+     1
+    ],
+    "geo": [
+     3,
+     3,
+     0,
+     0
+    ],
+    "hydro": [
+     9,
+     0,
+     5,
+     5
+    ],
+    "solar": [
+     565,
+     4,
+     1372,
+     0
+    ],
+    "wind": [
+     1,
+     0,
+     0,
+     0
+    ],
+    "dsub": [
+     60,
+     0,
+     56,
+     12
+    ],
+    "tsub": [
+     10,
+     0,
+     17,
+     4
+    ],
+    "tower": [
+     967,
+     1839,
+     220,
+     0
+    ]
+   },
+   "m": {
+    "biogas": [
+     0,
+     0,
+     6,
+     0
+    ],
+    "bsh": [
+     0,
+     0,
+     1,
+     0
+    ],
+    "biomass": [
+     3,
+     0,
+     3,
+     0
+    ],
+    "fossil": [
+     10,
+     1,
+     7,
+     1
+    ],
+    "geo": [
+     1,
+     5,
+     0,
+     0
+    ],
+    "hydro": [
+     6,
+     0,
+     8,
+     5
+    ],
+    "solar": [
+     156,
+     3,
+     1782,
+     0
+    ],
+    "wind": [
+     1,
+     0,
+     0,
+     0
+    ],
+    "dsub": [
+     28,
+     0,
+     64,
+     36
+    ],
+    "tsub": [
+     3,
+     0,
+     17,
+     11
+    ],
+    "tower": [
+     285,
+     1763,
+     978,
+     0
+    ]
+   }
+  },
+  "drought": {
+   "s": {
+    "biogas": [
+     1,
+     0,
+     5,
+     0
+    ],
+    "bsh": [
+     0,
+     0,
+     1,
+     0
+    ],
+    "biomass": [
+     5,
+     0,
+     1,
+     0
+    ],
+    "fossil": [
+     11,
+     7,
+     1,
+     0
+    ],
+    "geo": [
+     6,
+     0,
+     0,
+     0
+    ],
+    "hydro": [
+     8,
+     1,
+     9,
+     1
+    ],
+    "solar": [
+     570,
+     1214,
+     157,
+     0
+    ],
+    "wind": [
+     1,
+     0,
+     0,
+     0
+    ],
+    "dsub": [
+     111,
+     17,
+     0,
+     0
+    ],
+    "tsub": [
+     28,
+     3,
+     0,
+     0
+    ],
+    "tower": [
+     2430,
+     596,
+     0,
+     0
+    ]
+   },
+   "m": {
+    "biogas": [
+     0,
+     0,
+     6,
+     0
+    ],
+    "bsh": [
+     0,
+     0,
+     1,
+     0
+    ],
+    "biomass": [
+     5,
+     0,
+     1,
+     0
+    ],
+    "fossil": [
+     10,
+     7,
+     1,
+     1
+    ],
+    "geo": [
+     4,
+     2,
+     0,
+     0
+    ],
+    "hydro": [
+     7,
+     2,
+     9,
+     1
+    ],
+    "solar": [
+     263,
+     1108,
+     570,
+     0
+    ],
+    "wind": [
+     1,
+     0,
+     0,
+     0
+    ],
+    "dsub": [
+     99,
+     29,
+     0,
+     0
+    ],
+    "tsub": [
+     25,
+     6,
+     0,
+     0
+    ],
+    "tower": [
+     2342,
+     684,
+     0,
+     0
+    ]
+   }
+  },
+  "heat": {
+   "s": {
+    "biogas": [
+     6,
+     0,
+     0,
+     0
+    ],
+    "bsh": [
+     1,
+     0,
+     0,
+     0
+    ],
+    "biomass": [
+     6,
+     0,
+     0,
+     0
+    ],
+    "fossil": [
+     14,
+     5,
+     0,
+     0
+    ],
+    "geo": [
+     6,
+     0,
+     0,
+     0
+    ],
+    "hydro": [
+     19,
+     0,
+     0,
+     0
+    ],
+    "solar": [
+     1673,
+     268,
+     0,
+     0
+    ],
+    "wind": [
+     1,
+     0,
+     0,
+     0
+    ],
+    "dsub": [
+     116,
+     0,
+     12,
+     0
+    ],
+    "tsub": [
+     29,
+     0,
+     2,
+     0
+    ],
+    "tower": [
+     2873,
+     153,
+     0,
+     0
+    ]
+   },
+   "m": {
+    "biogas": [
+     0,
+     6,
+     0,
+     0
+    ],
+    "bsh": [
+     0,
+     1,
+     0,
+     0
+    ],
+    "biomass": [
+     3,
+     2,
+     1,
+     0
+    ],
+    "fossil": [
+     8,
+     6,
+     4,
+     1
+    ],
+    "geo": [
+     4,
+     2,
+     0,
+     0
+    ],
+    "hydro": [
+     19,
+     0,
+     0,
+     0
+    ],
+    "solar": [
+     5,
+     1935,
+     0,
+     1
+    ],
+    "wind": [
+     1,
+     0,
+     0,
+     0
+    ],
+    "dsub": [
+     0,
+     0,
+     128,
+     0
+    ],
+    "tsub": [
+     0,
+     0,
+     31,
+     0
+    ],
+    "tower": [
+     0,
+     2873,
+     153,
+     0
+    ]
+   }
+  }
+ },
+ "MW": {
+  "flood": {
+   "s": {
+    "biogas": [
+     5,
+     0,
+     0,
+     0
+    ],
+    "bsh": [
+     5.2,
+     0,
+     0,
+     0
+    ],
+    "biomass": [
+     150.58,
+     0,
+     53,
+     0
+    ],
+    "fossil": [
+     738.8,
+     40.5,
+     288.8,
+     12.8
+    ],
+    "geo": [
+     120,
+     111,
+     0,
+     0
+    ],
+    "hydro": [
+     622.54,
+     0,
+     0.83,
+     0
+    ],
+    "solar": [
+     202.7,
+     47,
+     155.2,
+     0
+    ],
+    "wind": [
+     54,
+     0,
+     0,
+     0
+    ]
+   },
+   "m": {
+    "biogas": [
+     0,
+     0,
+     5,
+     0
+    ],
+    "bsh": [
+     0,
+     0,
+     5.2,
+     0
+    ],
+    "biomass": [
+     132.58,
+     0,
+     71,
+     0
+    ],
+    "fossil": [
+     738.8,
+     40.5,
+     288.8,
+     12.8
+    ],
+    "geo": [
+     95,
+     136,
+     0,
+     0
+    ],
+    "hydro": [
+     622.54,
+     0,
+     0.83,
+     0
+    ],
+    "solar": [
+     169.9,
+     27.8,
+     207.2,
+     0
+    ],
+    "wind": [
+     54,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  "drought": {
+   "s": {
+    "biogas": [
+     0,
+     0,
+     5,
+     0
+    ],
+    "bsh": [
+     0,
+     0,
+     5.2,
+     0
+    ],
+    "biomass": [
+     175.58,
+     0,
+     28,
+     0
+    ],
+    "fossil": [
+     779.3,
+     301.4,
+     0.175,
+     0
+    ],
+    "geo": [
+     231,
+     0,
+     0,
+     0
+    ],
+    "hydro": [
+     436.94,
+     185.6,
+     0.83,
+     0
+    ],
+    "solar": [
+     261.4,
+     128.4,
+     15.14,
+     0
+    ],
+    "wind": [
+     54,
+     0,
+     0,
+     0
+    ]
+   },
+   "m": {
+    "biogas": [
+     0,
+     0,
+     5,
+     0
+    ],
+    "bsh": [
+     0,
+     0,
+     5.2,
+     0
+    ],
+    "biomass": [
+     175.58,
+     0,
+     28,
+     0
+    ],
+    "fossil": [
+     779.3,
+     288.6,
+     0.175,
+     12.8
+    ],
+    "geo": [
+     125,
+     106,
+     0,
+     0
+    ],
+    "hydro": [
+     417.14,
+     205.4,
+     0.83,
+     0
+    ],
+    "solar": [
+     239,
+     126.8,
+     39.16,
+     0
+    ],
+    "wind": [
+     54,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  "heat": {
+   "s": {
+    "biogas": [
+     5,
+     0,
+     0,
+     0
+    ],
+    "bsh": [
+     5.2,
+     0,
+     0,
+     0
+    ],
+    "biomass": [
+     203.58,
+     0,
+     0,
+     0
+    ],
+    "fossil": [
+     779.5,
+     301.4,
+     0,
+     0
+    ],
+    "geo": [
+     231,
+     0,
+     0,
+     0
+    ],
+    "hydro": [
+     623.37,
+     0,
+     0,
+     0
+    ],
+    "solar": [
+     315.7,
+     89.19,
+     0,
+     0
+    ],
+    "wind": [
+     54,
+     0,
+     0,
+     0
+    ]
+   },
+   "m": {
+    "biogas": [
+     0,
+     5,
+     0,
+     0
+    ],
+    "bsh": [
+     0,
+     5.2,
+     0,
+     0
+    ],
+    "biomass": [
+     157.58,
+     28,
+     18,
+     0
+    ],
+    "fossil": [
+     767.9,
+     11.58,
+     288.6,
+     12.8
+    ],
+    "geo": [
+     131,
+     100,
+     0,
+     0
+    ],
+    "hydro": [
+     623.37,
+     0,
+     0,
+     0
+    ],
+    "solar": [
+     183.9,
+     207.2,
+     0,
+     13.8
+    ],
+    "wind": [
+     54,
+     0,
+     0,
+     0
+    ]
+   }
+  }
+ },
+ "MEAS": [
+  {
+   "a": "Hydropower",
+   "ids": [
+    "hydro"
+   ],
+   "h": "flood",
+   "imp": "Damage to dam walls and turbines, directly or from debris carried from flooded areas upstream. Water released through bypass channels reduces output.",
+   "m": [
+    "Build or reinforce defence structures for dams and turbines, such as check dams and dykes",
+    "Adjust water management, for example retention ponds that store excess water and release it gradually"
+   ]
+  },
+  {
+   "a": "Hydropower",
+   "ids": [
+    "hydro"
+   ],
+   "h": "drought",
+   "imp": "Less water available for generation.",
+   "m": [
+    "Restore reservoir storage capacity by dredging",
+    "Assess options to increase storage, such as raising dams or building water transfer works",
+    "Carry out bathymetric surveys more often to track loss of volume to sediment",
+    "Consider vortex, hydrokinetic or hydro-screw turbines at plant outlets and along rivers",
+    "Install floating solar PV on reservoirs and on the land around them"
+   ]
+  },
+  {
+   "a": "Solar PV",
+   "ids": [
+    "solar"
+   ],
+   "h": "flood",
+   "imp": "Damage to infrastructure, lower output from debris, electrical hazards.",
+   "m": [
+    "Raise inverters and electrical equipment above flood levels",
+    "Use robust foundations, sealed wiring and corrosion-resistant structures",
+    "Design site drainage and retention areas, and keep water out of electrical conduits",
+    "Plant native pollinator vegetation to absorb stormwater and limit erosion"
+   ]
+  },
+  {
+   "a": "Solar PV",
+   "ids": [
+    "solar"
+   ],
+   "h": "drought",
+   "imp": "Dust and debris on panels lower efficiency and can damage modules.",
+   "m": [
+    "Schedule cleaning, including automated cleaning controlled by sensors",
+    "Use anti-soiling coatings and measure soiling rates regularly",
+    "Set panel tilt to help dust slide off",
+    "Add storage to cover periods of low hydropower output",
+    "Study cloud cover and solar resource where more dry days are projected, to find room for more solar"
+   ]
+  },
+  {
+   "a": "Solar PV",
+   "ids": [
+    "solar"
+   ],
+   "h": "heat",
+   "imp": "Lower panel efficiency, thermal degradation, hot spots and faster ageing.",
+   "m": [
+    "Passive cooling (natural airflow, floating PV) or active cooling",
+    "Use panels with a lower temperature coefficient, such as heterojunction cells",
+    "Add shading structures or reflective surfaces",
+    "Consider replacing panels with more efficient technologies"
+   ]
+  },
+  {
+   "a": "Bioenergy",
+   "ids": [
+    "biomass",
+    "biogas"
+   ],
+   "h": "flood",
+   "imp": "Crop losses, delayed planting, more disease, and disrupted collection and transport of feedstock.",
+   "m": [
+    "Raise equipment and protect feedstock storage",
+    "Fit backflow preventers on biogas systems",
+    "Use nature-based solutions such as wetland restoration and flood-tolerant crops",
+    "Improve drainage and use farming practices that limit soil damage"
+   ]
+  },
+  {
+   "a": "Bioenergy",
+   "ids": [
+    "biomass",
+    "biogas"
+   ],
+   "h": "drought",
+   "imp": "Drier soils and poorer crop quality reduce yields. The same measures apply to heatwaves.",
+   "m": [
+    "Promote drought-tolerant sugarcane varieties",
+    "Use efficient irrigation, such as drip and precision water management",
+    "Harvest rainwater and recycle wastewater",
+    "Mulch with crop residues to keep moisture in the soil",
+    "Assess biogas from urban organic waste in Santa Ana, San Salvador and San Miguel"
+   ]
+  },
+  {
+   "a": "Geothermal",
+   "ids": [
+    "geo"
+   ],
+   "h": "flood",
+   "imp": "Flood water damages wellheads and control systems.",
+   "m": [
+    "Raise control and electrical systems",
+    "Build embankments and drainage to divert flood water"
+   ]
+  },
+  {
+   "a": "Fossil thermal",
+   "ids": [
+    "fossil"
+   ],
+   "h": "drought",
+   "imp": "Shortage of cooling water reduces cooling efficiency and forces plants to run below capacity.",
+   "m": [
+    "Adopt dry or hybrid cooling",
+    "Recycle water, for example reusing wastewater during droughts"
+   ]
+  },
+  {
+   "a": "Fossil thermal",
+   "ids": [
+    "fossil"
+   ],
+   "h": "heat",
+   "imp": "Lower efficiency forces plants to run below capacity. Heat expansion can damage above-ground pipelines.",
+   "m": [
+    "Plan dispatch around cooling water availability during heatwaves",
+    "Upgrade turbines, condensers and cooling towers to perform at high temperatures",
+    "Monitor conditions in real time and inspect cooling systems regularly",
+    "Expand on-site water storage drawing on several sources"
+   ]
+  },
+  {
+   "a": "Substations",
+   "ids": [
+    "tsub",
+    "dsub"
+   ],
+   "h": "flood",
+   "imp": "Equipment damage, short circuits, corrosion, and failure of protection and control systems.",
+   "m": [
+    "Raise switchgear and control rooms",
+    "Install flood barriers",
+    "Waterproof components where possible"
+   ]
+  },
+  {
+   "a": "Substations",
+   "ids": [
+    "tsub",
+    "dsub"
+   ],
+   "h": "heat",
+   "imp": "Transformers overheat and lose efficiency and lifespan, raising the risk of failure. Derating them limits grid capacity.",
+   "m": [
+    "Add or upgrade transformer cooling and maintain it",
+    "Install temperature monitoring",
+    "Add remotely operated switching linked to SCADA for fast fault isolation"
+   ]
+  },
+  {
+   "a": "T&D lines",
+   "ids": [
+    "tower"
+   ],
+   "h": "flood",
+   "imp": "Erosion of support structures. Soil movement can displace underground cables and stress their insulation.",
+   "m": [
+    "Build flood-control infrastructure such as retention ponds",
+    "Improve insulator design to keep water out"
+   ]
+  },
+  {
+   "a": "T&D lines",
+   "ids": [
+    "tower"
+   ],
+   "h": "heat",
+   "imp": "Higher losses, lower line capacity and sagging lines.",
+   "m": [
+    "Use dynamic line rating (DLR)",
+    "Increase line tension, or reconductor with high-temperature low-sag (HTLS) conductors",
+    "Underground critical sections",
+    "Manage vegetation near lines",
+    "Add remotely operated switching linked to SCADA"
+   ]
+  },
+  {
+   "a": "Transmission towers",
+   "ids": [
+    "tower"
+   ],
+   "h": "flood",
+   "imp": "Damage to towers and erosion of their foundations.",
+   "m": [
+    "Reinforce or raise tower foundations",
+    "Use flood-resistant materials",
+    "Divert flood water with embankments and drainage",
+    "Relocate sections on riverbanks or unstable slopes"
+   ]
+  },
+  {
+   "a": "Transmission towers",
+   "ids": [
+    "tower"
+   ],
+   "h": "heat",
+   "imp": "Lower efficiency.",
+   "m": [
+    "Adjust dispatch and load to avoid overloading"
+   ]
+  },
+  {
+   "a": "Transmission towers",
+   "ids": [
+    "tower"
+   ],
+   "h": "drought",
+   "imp": "Dry soil shrinks and cracks, weakening foundations.",
+   "m": [
+    "Inspect and reinforce foundations",
+    "Use protective coatings or heat-resistant materials",
+    "Control vegetation around towers"
+   ]
+  }
+ ],
+ "DEF": {
+  "Hydropower": {
+   "flood": [
+    1,
+    0.6
+   ],
+   "drought": [
+    1,
+    0.6
+   ],
+   "heat": [
+    0.4,
+    0.8
+   ]
+  },
+  "Solar PV": {
+   "flood": [
+    0.8,
+    0.6
+   ],
+   "drought": [
+    0.8,
+    0.8
+   ],
+   "heat": [
+    0.6,
+    0.8
+   ]
+  },
+  "Biogas": {
+   "flood": [
+    0.8,
+    0.6
+   ],
+   "drought": [
+    0.8,
+    0.6
+   ],
+   "heat": [
+    0.6,
+    0.6
+   ]
+  },
+  "Biomass": {
+   "flood": [
+    0.8,
+    0.6
+   ],
+   "drought": [
+    0.8,
+    0.6
+   ],
+   "heat": [
+    0.6,
+    0.6
+   ]
+  },
+  "Geothermal": {
+   "flood": [
+    0.4,
+    0.8
+   ],
+   "drought": [
+    0.4,
+    0.8
+   ],
+   "heat": [
+    0.4,
+    0.8
+   ]
+  },
+  "Wind": {
+   "flood": [
+    0.6,
+    0.6
+   ],
+   "drought": [
+    0.2,
+    0.8
+   ],
+   "heat": [
+    0.4,
+    0.8
+   ]
+  },
+  "Fossil thermal": {
+   "flood": [
+    0.8,
+    0.6
+   ],
+   "drought": [
+    0.6,
+    0.6
+   ],
+   "heat": [
+    0.6,
+    0.6
+   ]
+  },
+  "Substation": {
+   "flood": [
+    1,
+    0.6
+   ],
+   "drought": [
+    0.4,
+    0.8
+   ],
+   "heat": [
+    0.8,
+    0.6
+   ]
+  },
+  "Transmission tower": {
+   "flood": [
+    0.6,
+    0.6
+   ],
+   "drought": [
+    0.4,
+    0.8
+   ],
+   "heat": [
+    0.6,
+    0.6
+   ]
+  }
+ },
+ "ASSETS": [
+  {
+   "id": "hydro",
+   "name": "Hydropower",
+   "g": "gen"
+  },
+  {
+   "id": "solar",
+   "name": "Solar PV",
+   "g": "gen"
+  },
+  {
+   "id": "fossil",
+   "name": "Fossil thermal",
+   "g": "gen"
+  },
+  {
+   "id": "geo",
+   "name": "Geothermal",
+   "g": "gen"
+  },
+  {
+   "id": "biomass",
+   "name": "Biomass",
+   "g": "gen"
+  },
+  {
+   "id": "biogas",
+   "name": "Biogas",
+   "g": "gen"
+  },
+  {
+   "id": "wind",
+   "name": "Wind",
+   "g": "gen"
+  },
+  {
+   "id": "bsh",
+   "name": "Biogas-solar-hydro",
+   "note": "planned",
+   "g": "gen"
+  },
+  {
+   "id": "tsub",
+   "name": "Transmission substations",
+   "g": "grid"
+  },
+  {
+   "id": "dsub",
+   "name": "Distribution substations",
+   "g": "grid"
+  },
+  {
+   "id": "tower",
+   "name": "Transmission towers",
+   "g": "grid"
+  }
+ ],
+ "HAZ": {
+  "flood": {
+   "name": "Floods",
+   "ind": "Rx5day – max. 5-day rainfall",
+   "col": "#2F6FA8"
+  },
+  "drought": {
+   "name": "Droughts",
+   "ind": "CDD – consecutive dry days",
+   "col": "#A0692B"
+  },
+  "heat": {
+   "name": "Heatwaves",
+   "ind": "TX95 – number of very hot days",
+   "col": "#C2412D"
+  }
+ },
+ "PER": {
+  "s": "2015–2044",
+  "m": "2041–2070"
+ },
+ "CATS": [
+  "Low",
+  "Moderate",
+  "High",
+  "Critical"
+ ],
+ "meta": {
+  "title": "Power under pressure",
+  "country": "El Salvador",
+  "subtitle": "Climate risk to the power sector",
+  "source": "IRENA assessment, Annex 4 and Annex 5, annual aggregation",
+  "edition": "2026"
+ }
+}

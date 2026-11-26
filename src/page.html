@@ -1,0 +1,183 @@
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="wrap mast">
+  <span class="wordmark">IRENA</span>
+  <span class="sep" aria-hidden="true"></span>
+  <span class="org">El Salvador &middot; Power sector</span>
+  <div class="right">
+    <span class="edition">Climate risk assessment &middot; 2026</span>
+  </div>
+</header>
+
+<main id="main">
+<div class="wrap">
+
+  <section class="hero">
+    <div>
+      <p class="eyebrow">Power sector climate risk</p>
+      <h1>Power under pressure</h1>
+      <p class="standfirst">Floods, droughts and heatwaves reach every part of El Salvador&rsquo;s power system. This dashboard shows where the risk falls in the near term, where it grows by mid-century, and which measures reduce it.</p>
+    </div>
+    <div class="kpis" id="kpis" aria-live="polite"></div>
+  </section>
+
+  <section class="mapcard" aria-labelledby="maptitle">
+    <div class="mapbar">
+      <div class="seg" id="c-haz" role="group" aria-label="Hazard"></div>
+    </div>
+    <div class="mapview" id="mapview">
+      <div class="maplabel" id="maplabel"></div>
+    </div>
+    <div class="mapside">
+      <h2 id="maptitle">Where floods grow</h2>
+      <p id="finding"></p>
+      <div class="mini" id="mini"></div>
+      <p class="fine">Indicative geographic pattern of change. Department boundaries: geoBoundaries. Asset counts appear in the chart and the register, not on the map.</p>
+    </div>
+  </section>
+
+  <div class="tabrow">
+    <div class="tabs" role="tablist" aria-label="Sections">
+      <button class="tab" role="tab" id="tab-results" aria-controls="view-results" aria-selected="true" data-view="results">Risk results</button>
+      <button class="tab" role="tab" id="tab-measures" aria-controls="view-measures" aria-selected="false" data-view="measures">Measures</button>
+      <button class="tab" role="tab" id="tab-method" aria-controls="view-method" aria-selected="false" data-view="method">Method</button>
+      <button class="tab" role="tab" id="tab-register" aria-controls="view-register" aria-selected="false" data-view="register">Register</button>
+    </div>
+    <button class="btn" id="dl-top" type="button" title="Download the register as CSV">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="m7 11 5 5 5-5"/><path d="M4 21h16"/></svg>
+      <span>Download CSV</span>
+    </button>
+  </div>
+
+  <!-- results -->
+  <section class="view on" id="view-results" role="tabpanel" aria-labelledby="tab-results">
+    <div class="panel">
+      <div class="fieldrow">
+        <div class="grp"><span class="lab">Period</span><div class="seg" id="c-per" role="group" aria-label="Period"></div></div>
+        <div class="grp"><span class="lab">Measure</span><div class="seg" id="c-met" role="group" aria-label="Measure"></div></div>
+      </div>
+      <div class="legend" id="legend"></div>
+      <div class="chart" id="chart"></div>
+      <p class="note" id="chart-note"></p>
+    </div>
+  </section>
+
+  <!-- measures -->
+  <section class="view" id="view-measures" role="tabpanel" aria-labelledby="tab-measures">
+    <div class="panel">
+      <h2>Resilience measures by asset and hazard</h2>
+      <p class="lede">A menu of options, not a prescription. Each card gives the potential impacts and the measures available for one asset group and hazard, with the share of assets at high or critical risk in 2041&ndash;2070. Measures are prioritised on risk, asset criticality, feasibility, cost and co-benefits.</p>
+      <div class="fieldrow">
+        <div class="grp"><span class="lab">Asset group</span><div class="chips" id="m-asset"></div></div>
+        <div class="grp"><span class="lab">Hazard</span><div class="chips" id="m-haz"></div></div>
+      </div>
+      <div class="mgrid" id="mgrid"></div>
+    </div>
+  </section>
+
+  <!-- method -->
+  <section class="view" id="view-method" role="tabpanel" aria-labelledby="tab-method">
+    <div class="panel">
+      <h2>How climate risk is calculated</h2>
+      <p class="lede">The assessment applies the IPCC risk framework to every asset, for each hazard and period. Hazard is banded by percentile at the asset location, exposure is set by the asset sitting where the hazard occurs, and vulnerability is the ratio of sensitivity to adaptive capacity.</p>
+      <div class="chain">
+        <div class="step"><b>Hazard</b><span>Hazard value at the asset location, banded by percentile: Low 0.4, Moderate 0.8, High 1.0.</span></div>
+        <div class="op" aria-hidden="true">&times;</div>
+        <div class="step"><b>Exposure</b><span>Equal to the hazard score, since the asset sits where the hazard occurs.</span></div>
+        <div class="op" aria-hidden="true">&times;</div>
+        <div class="step"><b>Vulnerability</b><span>Sensitivity divided by adaptive capacity, each scored 0 to 1 by asset type or from the operator survey.</span></div>
+        <div class="op" aria-hidden="true">=</div>
+        <div class="step"><b>Risk</b><span>Low up to 0.4, Moderate up to 0.8, High up to 1.5, Critical above 1.5.</span></div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h2>How resilience measures lower risk</h2>
+      <p class="lede">Select an asset type and hazard to load the report&rsquo;s default scores. Raising adaptive capacity or lowering sensitivity, as a resilience measure would, moves the score down the scale.</p>
+      <div class="calc">
+        <div class="controls">
+          <div class="f"><label for="k-asset">Asset type</label><select id="k-asset"></select></div>
+          <div class="f"><label for="k-haz">Hazard</label><select id="k-haz"></select></div>
+          <div class="f"><span class="lab">Hazard level at the site</span><div class="seg" id="k-lvl" role="group" aria-label="Hazard level"></div></div>
+          <div class="f"><label for="k-s">Sensitivity <output id="o-s">1.0</output></label><input type="range" id="k-s" min="0" max="1" step="0.1" value="1"></div>
+          <div class="f"><label for="k-ac">Adaptive capacity <output id="o-ac">0.6</output></label><input type="range" id="k-ac" min="0.1" max="1" step="0.1" value="0.6"></div>
+          <div class="rowc">
+            <button class="btn primary" id="k-measure" type="button">Apply a resilience measure</button>
+            <button class="btn" id="k-reset" type="button">Reset</button>
+          </div>
+        </div>
+        <div>
+          <span class="lab">Climate risk score</span>
+          <div style="margin-top:10px"><span class="score" id="r-score">1.67</span><span class="badge" id="r-cat">Critical</span></div>
+          <div class="gauge" id="r-scale"><div class="mark" id="r-mark"></div></div>
+          <div class="scale"><span>0</span><span>0.4</span><span>0.8</span><span>1.5</span><span>2.5</span></div>
+          <p class="expl" id="r-expl"></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- register -->
+  <section class="view" id="view-register" role="tabpanel" aria-labelledby="tab-register">
+    <div class="panel">
+      <h2>Asset register</h2>
+      <p class="lede">Every asset group, hazard and period in the assessment, with the number of assets and the installed capacity in each risk class. Capacity applies to generation assets only.</p>
+      <div class="tblbar">
+        <input type="search" id="q" placeholder="Search asset, hazard or class" aria-label="Search the register">
+        <select id="f-haz" aria-label="Filter by hazard">
+          <option value="all">All hazards</option>
+          <option value="flood">Floods</option>
+          <option value="drought">Droughts</option>
+          <option value="heat">Heatwaves</option>
+        </select>
+        <select id="f-per" aria-label="Filter by period">
+          <option value="all">Both periods</option>
+          <option value="s">2015&ndash;2044</option>
+          <option value="m">2041&ndash;2070</option>
+        </select>
+        <button class="btn" id="dl-reg" type="button">Download CSV</button>
+        <span class="count" id="rcount"></span>
+      </div>
+      <div class="tblwrap">
+        <table class="tbl" id="reg">
+          <thead><tr>
+            <th data-k="group">Group</th>
+            <th data-k="asset">Asset</th>
+            <th data-k="haz">Hazard</th>
+            <th data-k="per">Period</th>
+            <th data-k="cls">Risk class</th>
+            <th data-k="n" class="num">Assets</th>
+            <th data-k="mw" class="num">Capacity (MW)</th>
+          </tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+</div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="cols">
+      <div>
+        <h5>Source</h5>
+        <p>IRENA power sector climate risk assessment for El Salvador, Annex 4 and Annex 5, annual aggregation. Asset counts and capacities as reported in the assessment dataset.</p>
+        <p>Prototype for discussion. Figures may change after validation with the national counterparts.</p>
+      </div>
+      <div>
+        <h5>Coverage</h5>
+        <p id="f-cov">&nbsp;</p>
+      </div>
+      <div>
+        <h5>Edition</h5>
+        <p>Built <span id="f-date">&nbsp;</span></p>
+        <p>&copy; IRENA 2026</p>
+      </div>
+    </div>
+    <p class="disclaimer">The designations employed and the presentation of materials herein do not imply the expression of any opinion on the part of IRENA concerning the legal status of any region, country, territory, city or area or of its authorities, or concerning the delimitation of frontiers or boundaries.</p>
+  </div>
+</footer>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false" id="sprite"></svg>

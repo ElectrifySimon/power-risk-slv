@@ -1,0 +1,23 @@
+# Devlog
+
+## 26 November 2026 - first build
+
+Source material: two artifacts prepared by the team in Claude (a dashboard preview and a long-read story), plus the IRENA risk assessment annex tables. The story is not reproduced here; this page replaces the dashboard shell and keeps its content.
+
+What changed from the team's build:
+
+- Palette corrected. Their `--blue` was `#0073A7`; IRENA blue is `#0073AB`. Three ad-hoc blues replaced by one blue and a defined ramp.
+- Type replaced. Arial throughout became Montserrat for display and Inter for interface, both self-hosted and inlined, with tabular figures.
+- Risk ramp rebuilt. Four hues (green, amber, orange, red) became one hue ladder with red reserved for critical, and labels placed outside thin segments. Their low and moderate colours measured 2.17:1 and 1.87:1 against white.
+- Map replaced. The team's 40-point schematic outline became 14 real departments from geoBoundaries, with a directional hazard wash labelled as an indicative pattern. No invented values: the assessment has no department-level hazard figures yet.
+- Register added. 3,026 towers, 159 substations and 1,999 generation assets can now be inspected and exported; the team's build had a three-row table.
+- KPI strip derives every number from the same tables as the charts. Checked against the source artifact: 91%, 23%, 81%, 32% for floods, 2041-2070.
+- Accessibility: skip link, tab roles, visible focus rings, reduced-motion guard, print stylesheet. The source had no `:focus` rule at all.
+- Print: all four sections print, tabs and controls hide, table unclips.
+
+Verified in Chrome at 390, 768 and 1440 px: no horizontal overflow, map and its SVG share the same box, stacked bars fill their column, segments sum to 100%, no console errors.
+
+Notes:
+
+- The capacity view applies to generation only, as in the source.
+- Hotspot labels WEST / CENTRE / EAST are retained from the assessment narrative; they are not administrative units.
