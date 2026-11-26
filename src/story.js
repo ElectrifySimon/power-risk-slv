@@ -307,6 +307,7 @@
     app.classList.toggle("on", dash);
     story.style.display = dash ? "none" : "";
     document.body.style.background = dash ? "" : "#071627";
+    document.body.classList.toggle("dashmode", dash);
     if (dash) {
       window.scrollTo(0, 0);
       if (window.__animateKPIs) window.__animateKPIs();
