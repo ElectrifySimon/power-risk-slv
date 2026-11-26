@@ -56,7 +56,7 @@ if (title) {
 document.querySelectorAll("[data-hl]").forEach((el) => {
   const text = el.textContent;
   const action = el.getAttribute("data-hl") || "highlight";
-  const color = el.getAttribute("data-hl-color") || "rgba(0,115,171,0.5)";
+  const color = el.getAttribute("data-hl-color") || "rgba(255,186,110,0.34)";
   createRoot(el).render(
     <Highlighter action={action} color={color} strokeWidth={1.6} animationDuration={900} iterations={1} padding={3} multiline>
       {text}
@@ -70,7 +70,7 @@ document.querySelectorAll(".s-step h3, .s-cta h2").forEach((el) => {
   el.dataset.annotated = "1";
   const a = annotate(el, {
     type: "highlight",
-    color: "rgba(0,115,171,0.30)",
+    color: "rgba(255,186,110,0.32)",
     strokeWidth: 1,
     animationDuration: 900,
     iterations: 1,
