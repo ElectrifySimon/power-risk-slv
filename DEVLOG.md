@@ -29,3 +29,10 @@ Notes:
 - Round three fixes: hero columns aligned to one grid, KPI numbers reduced below the H1 and rebuilt as delta chips, map neighbour labels moved outside the borders, a less-change/more-change key under the map, chart rows sorted by share with a high-plus-critical column, register filters for group and risk class, sort indicators, `n/a` for capacity that is not reported, and a scroll fade on the table.
 - Small samples now say `indicative` in the row label, so a planned asset cannot read as a 100% finding.
 - Visual review ran on a second model (Claude Haiku via the vision gateway, since the default model returns empty answers for images). Scores moved 7 to 8 out of 10 on the story hero.
+
+## 26 November 2026 - ECharts
+
+- Story visualisations now run on Apache ECharts 5 (vendored, 1.1 MB, served from `vendor/echarts.min.js`, not inlined; Staticrypt encrypts only the page).
+- Charts: substation waffle (scatter on a grid, staggered 4 ms per cell), hydropower grid (22 ms per plant), solar stacked bars across the two periods. Lazy-initialised on step activation so the reveal animation plays when the reader arrives, not off-screen at load.
+- Legends added under each chart; waffle widened to 470px.
+- Verified: no console errors, three canvases at 470x300 / 320x170 / 460x170, 94k-122k pixels change between frames 600 ms apart on entry.
