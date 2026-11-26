@@ -106,6 +106,11 @@ def fonts_css(css):
     return css
 
 
+def _v(path):
+    import hashlib
+    return hashlib.md5(open(path, "rb").read()).hexdigest()[:8]
+
+
 def main():
     data = json.load(open(os.path.join(ROOT, "data", "slv.json"), encoding="utf-8"))
     data["GEO"] = load_geo()
@@ -135,8 +140,8 @@ def main():
 <div id="app" class="app">
 {body}
 </div>
-<script src="vendor/echarts.min.js"></script>
-<script src="vendor/hero-react.js"></script>
+<script src="vendor/echarts.min.js?v=__ECH_V__"></script>
+<script src="vendor/hero-react.js?v=__HERO_V__"></script>
 <script>
 var DATA = {json.dumps(data, ensure_ascii=False, separators=(",", ":"))};
 document.getElementById("sprite").innerHTML = {json.dumps(sprite)};
@@ -149,8 +154,11 @@ document.getElementById("sprite").innerHTML = {json.dumps(sprite)};
     os.makedirs(os.path.join(ROOT, "build"), exist_ok=True)
     os.makedirs(os.path.join(ROOT, "build", "vendor"), exist_ok=True)
     import shutil as _sh
+    hero_v = _v(os.path.join(ROOT, "vendor", "hero-react.js"))
+    ech_v = _v(os.path.join(ROOT, "vendor", "echarts.min.js"))
     _sh.copy(os.path.join(ROOT, "vendor", "echarts.min.js"),
              os.path.join(ROOT, "build", "vendor", "echarts.min.js"))
+    html = html.replace("__HERO_V__", hero_v).replace("__ECH_V__", ech_v)
     _sh.copy(os.path.join(ROOT, "vendor", "hero-react.js"),
              os.path.join(ROOT, "build", "vendor", "hero-react.js"))
     out = os.path.join(ROOT, "build", "index.html")
