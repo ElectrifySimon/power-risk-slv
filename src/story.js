@@ -1,118 +1,178 @@
 (function () {
   "use strict";
-  var $ = function (s) { return document.querySelector(s); };
+  var $ = function (s, r) { return (r || document).querySelector(s); };
   var story = $("#story"), app = $("#app");
   if (!story || !app) return;
 
   var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  var GEO = DATA.GEO, N = DATA.N, ASSETS = DATA.ASSETS;
-  var COL = ["#E1E9F1", "#A9C0D5", "#0073AB", "#B03218"];
+  var GEO = DATA.GEO, N = DATA.N;
+  var CCOL = { low: "#9FB3C6", mod: "#93AFC8", high: "#0073AB", crit: "#B03218" };
 
-  /* ---- layers ---- */
-  function landSvg(id, opacity, stroke, width) {
-    var vb = GEO.vb.split(" ").map(Number);
-    var paths = GEO.depts.map(function (d) {
-      return '<path d="' + d.d + '"/>';
-    }).join("");
-    $("#" + id).innerHTML =
-      '<svg viewBox="' + GEO.vb + '" preserveAspectRatio="xMidYMid meet" aria-hidden="true">' +
-      '<g fill="none" stroke="' + stroke + '" stroke-width="' + (width || 1) + '" stroke-linejoin="round" opacity="' + opacity + '">' +
-      paths + "</g></svg>";
+  /* ---------- hero art ---------- */
+  function landSvg(target, stroke, width, opacity) {
+    var paths = GEO.depts.map(function (d) { return '<path d="' + d.d + '"/>'; }).join("");
+    target.innerHTML = '<svg viewBox="' + GEO.vb + '" preserveAspectRatio="xMidYMid meet" aria-hidden="true">' +
+      '<g fill="rgba(142,197,255,.045)" stroke="' + stroke + '" stroke-width="' + width +
+      '" stroke-linejoin="round" opacity="' + opacity + '">' + paths + "</g></svg>";
   }
-
-  function contours(id) {
-    var vb = GEO.vb.split(" ").map(Number), w = vb[2], h = vb[3];
-    var out = "";
-    for (var i = 0; i < 16; i++) {
-      var r = 70 + i * 34, amp = 8 + (i % 4) * 4;
-      var pts = [];
+  function contours(target) {
+    var vb = GEO.vb.split(" ").map(Number), w = vb[2], h = vb[3], out = "";
+    for (var i = 0; i < 18; i++) {
+      var r = 60 + i * 32, amp = 9 + (i % 3) * 5, pts = [];
       for (var a = 0; a <= 360; a += 8) {
         var rad = (a * Math.PI) / 180;
-        var rr = r + Math.sin(rad * 3 + i * 0.7) * amp + Math.cos(rad * 5 - i) * amp * 0.4;
-        pts.push([640 + Math.cos(rad) * rr * 1.25, 300 + Math.sin(rad) * rr * 0.72]);
+        var rr = r + Math.sin(rad * 3 + i * 0.6) * amp + Math.cos(rad * 4 - i) * amp * 0.45;
+        pts.push([660 + Math.cos(rad) * rr * 1.3, 310 + Math.sin(rad) * rr * 0.7]);
       }
-      out += "<path d=\"M" + pts.map(function (p) { return p[0].toFixed(1) + " " + p[1].toFixed(1); }).join("L") + "Z\"/>";
+      out += '<path d="M' + pts.map(function (p) { return p[0].toFixed(1) + " " + p[1].toFixed(1); }).join("L") + 'Z"/>';
     }
-    $("#" + id).innerHTML =
-      '<svg viewBox="0 0 ' + w + " " + h + '" preserveAspectRatio="xMidYMid slice" aria-hidden="true">' +
-      '<g fill="none" stroke="rgba(142,197,255,.12)" stroke-width="1">' + out + "</g></svg>";
+    target.innerHTML = '<svg viewBox="0 0 ' + w + " " + h + '" preserveAspectRatio="xMidYMid slice" aria-hidden="true">' +
+      '<g fill="none" stroke="rgba(142,197,255,.13)" stroke-width="1">' + out + "</g></svg>";
+  }
+  landSvg($("#art-land"), "rgba(142,197,255,.75)", 1.7, 1);
+  contours($("#art-contours"));
+
+  /* ---------- stage map ---------- */
+  var HAZ = ["flood", "drought", "heat"];
+  var GRAD = {
+    flood: ["#EAF2F8", "#8FB9D6", "#2C7CAA"],
+    drought: ["#F7F2E8", "#D9BC8C", "#8A6A3A"],
+    heat: ["#FCEFE9", "#DE9A81", "#B03218"]
+  };
+  function buildStageMap() {
+    var defs = HAZ.map(function (h) {
+      var x2 = h === "heat" ? 0 : 1, y2 = h === "heat" ? 1 : 0.2;
+      return '<linearGradient id="sg-' + h + '" x1="0" y1="0" x2="' + x2 + '" y2="' + y2 + '">' +
+        GRAD[h].map(function (c, i) { return '<stop offset="' + [0, 0.5, 1][i] + '" stop-color="' + c + '"/>'; }).join("") +
+        "</linearGradient>";
+    }).join("");
+    var clip = '<clipPath id="scountry">' + GEO.depts.map(function (d) { return '<path d="' + d.d + '"/>'; }).join("") + "</clipPath>";
+    var washes = HAZ.map(function (h) {
+      return '<rect class="swash" data-h="' + h + '" x="0" y="0" width="1000" height="560" fill="url(#sg-' + h + ')" opacity="0"/>';
+    }).join("");
+    var depts = GEO.depts.map(function (d) {
+      return '<path class="dept" d="' + d.d + '"><title>' + d.n + "</title></path>";
+    }).join("");
+    var labels = GEO.labels.map(function (l) {
+      return '<text class="' + l.c + '" x="' + l.x + '" y="' + l.y + '"' + (l.anchor ? ' text-anchor="' + l.anchor + '"' : "") + ">" + l.t + "</text>";
+    }).join("");
+    var regions = GEO.regions.map(function (r) {
+      return '<text class="region" x="' + r.x + '" y="' + r.y + '" text-anchor="middle">' + r.t + "</text>";
+    }).join("");
+    $("#stage-map").innerHTML = '<svg viewBox="' + GEO.vb + '" role="img" aria-label="Map of El Salvador by department">' +
+      "<defs>" + defs + clip + "</defs>" +
+      '<g clip-path="url(#scountry)">' + washes + "</g>" +
+      "<g fill=\"none\">" + depts + "</g>" + labels + regions +
+      '<circle class="dot" cx="' + GEO.capital.x + '" cy="' + GEO.capital.y + '" r="4"/>' +
+      '<text class="capt" x="' + (GEO.capital.x + 8) + '" y="' + (GEO.capital.y + 3.5) + '">San Salvador</text>' +
+      "</svg>";
+  }
+  buildStageMap();
+
+  function paintMap(haz) {
+    Array.prototype.forEach.call(document.querySelectorAll(".swash"), function (r) {
+      r.setAttribute("opacity", r.getAttribute("data-h") === haz ? "0.9" : "0");
+    });
+    var ramp = $("#mapramp");
+    if (ramp) ramp.style.background = "linear-gradient(" + (haz === "heat" ? "180deg" : "90deg") + "," + GRAD[haz].join(",") + ")";
   }
 
-  landSvg("layer-land", "1", "rgba(142,197,255,.82)", 1.9);
-  landSvg("stage-ghost", ".3", "rgba(142,197,255,.5)", 1);
-  contours("layer-contours");
+  /* ---------- waffle, plants, solar ---------- */
+  function totals(haz, per, ids) {
+    var arr = [0, 0, 0, 0];
+    ids.forEach(function (id) {
+      (N[haz][per][id] || []).forEach(function (v, i) { arr[i] += v; });
+    });
+    return arr;
+  }
+  var SUBS = ["tsub", "dsub"];
+  var WF = {
+    s: { arr: totals("flood", "s", SUBS), title: "159 substations", note: "Near term, 2015\u20132044: 89 of 159 at high or critical flood risk, 16 of them critical." },
+    m: { arr: totals("flood", "m", SUBS), title: "159 substations", note: "2041\u20132070: 128 of 159 at high or critical flood risk, 47 of them critical." },
+    heat: { arr: totals("heat", "m", SUBS), title: "159 substations", note: "2041\u20132070: all 159 at high or critical heatwave risk, against 14 in the near term." }
+  };
+  function buildWaffle(key) {
+    var d = WF[key] || WF.s, box = $("#waffle"), order = [];
+    ["low", "mod", "high", "crit"].forEach(function (k, i) {
+      for (var j = 0; j < d.arr[i]; j++) order.push(k);
+    });
+    box.innerHTML = order.map(function (k) { return '<i class="' + k + '"></i>'; }).join("");
+    $("#wf-title").textContent = d.title;
+    $("#wf-note").textContent = d.note;
+  }
 
-  /* ---- parallax ---- */
-  var layers = [
-    { el: $(".s-layer.glow"), rate: 0.05 },
-    { el: $(".s-layer.contours"), rate: 0.12 },
-    { el: $(".s-layer.land"), rate: 0.26 }
+  function buildPlants() {
+    var arr = totals("drought", "m", ["hydro"]);
+    var hot = arr[2] + arr[3], total = arr.reduce(function (a, b) { return a + b; }, 0), out = "";
+    for (var i = 0; i < total; i++) out += '<i class="' + (i < hot ? "hot" : "") + '"></i>';
+    $("#plants").innerHTML = out;
+  }
+
+  function buildSolar() {
+    var rows = [["2015\u20132044", totals("heat", "s", ["solar"])], ["2041\u20132070", totals("heat", "m", ["solar"])]];
+    $("#solarbars").innerHTML = rows.map(function (r) {
+      var arr = r[1], t = arr.reduce(function (a, b) { return a + b; }, 0) || 1;
+      var bar = arr.map(function (v, i) {
+        return v ? '<i style="width:' + (v / t) * 100 + "%;background:" + CCOL[["low", "mod", "high", "crit"][i]] + '"></i>' : "";
+      }).join("");
+      return '<div class="solarrow"><span class="lbl">' + r[0] + '</span><div class="bar">' + bar + "</div></div>";
+    }).join("");
+  }
+
+  buildWaffle("s");
+  buildPlants();
+  buildSolar();
+
+  /* ---------- parallax ---------- */
+  var art = [
+    { el: $("#art-contours"), rate: 0.16 },
+    { el: $("#art-land"), rate: 0.3 }
   ];
   var ticking = false;
   function frame() {
     var y = window.scrollY || 0;
-    layers.forEach(function (l) {
-      if (!l.el) return;
-      l.el.style.transform = "translate3d(0," + (-y * l.rate).toFixed(1) + "px,0)";
-    });
+    if (!reduce) {
+      art.forEach(function (a) {
+        if (a.el) a.el.style.transform = "translate3d(0," + (-y * a.rate).toFixed(1) + "px,0)";
+      });
+    }
     ticking = false;
   }
-  if (!reduce) {
-    window.addEventListener("scroll", function () {
-      if (!ticking) { ticking = true; requestAnimationFrame(frame); }
-    }, { passive: true });
-    frame();
+  window.addEventListener("scroll", function () {
+    if (!ticking) { ticking = true; requestAnimationFrame(frame); }
+  }, { passive: true });
+  frame();
+
+  /* ---------- step observer ---------- */
+  var steps = Array.prototype.slice.call(document.querySelectorAll(".s-step"));
+  var vises = Array.prototype.slice.call(document.querySelectorAll(".vis"));
+  function activate(step) {
+    steps.forEach(function (s) { s.classList.toggle("on", s === step); });
+    var v = step.dataset.vis;
+    vises.forEach(function (n) { n.classList.toggle("on", n.dataset.vis === v); });
+    if (v === "map") {
+      paintMap(step.dataset.haz || "flood");
+      var mt = $("#map-title");
+      if (mt) mt.textContent = "Indicative pattern of change \u00b7 " + (step.dataset.haz || "flood") + "s";
+    }
+    if (v === "waffle") buildWaffle(step.dataset.waffle || "s");
   }
-
-  /* ---- scrolly steps ---- */
-  var NUM = [
-    { v: "56%", cap: "Substations at high or critical flood risk", sub: "2015\u20132044", haz: "flood", per: "s", ids: ["tsub", "dsub"] },
-    { v: "81%", cap: "Substations at high or critical flood risk", sub: "2041\u20132070", haz: "flood", per: "m", ids: ["tsub", "dsub"] },
-    { v: "100%", cap: "Substations at high or critical heatwave risk", sub: "2041\u20132070", haz: "heat", per: "m", ids: ["tsub", "dsub"] },
-    { v: "1\u00A0813", cap: "Generation assets at high or critical flood risk", sub: "2041\u20132070", haz: "flood", per: "m", ids: null }
-  ];
-
-  function spark(def) {
-    var arr = [0, 0, 0, 0];
-    var ids = def.ids || ASSETS.filter(function (a) { return a.g === "gen"; }).map(function (a) { return a.id; });
-    ids.forEach(function (id) {
-      var a = N[def.haz][def.per][id] || [];
-      a.forEach(function (v, i) { arr[i] += v; });
-    });
-    var t = arr.reduce(function (x, y) { return x + y; }, 0) || 1;
-    $("#sn-spark").innerHTML = arr.map(function (v, i) {
-      return v ? '<i style="width:' + (v / t) * 100 + "%;background:" + COL[i] + '"></i>' : "";
-    }).join("");
-  }
-
-  function setStep(i) {
-    var d = NUM[i]; if (!d) return;
-    $("#sn-num").textContent = d.v;
-    $("#sn-cap").textContent = d.cap;
-    $("#sn-sub").textContent = d.sub;
-    spark(d);
-  }
-  setStep(0);
-
-  var steps = Array.prototype.slice.call(document.querySelectorAll(".step"));
   if ("IntersectionObserver" in window) {
     var io = new IntersectionObserver(function (entries) {
       entries.forEach(function (e) {
-        if (!e.isIntersecting) return;
-        var i = +e.target.dataset.i;
-        steps.forEach(function (s) { s.classList.toggle("on", s === e.target); });
-        setStep(i);
+        if (e.isIntersecting) activate(e.target);
       });
-    }, { rootMargin: "-42% 0px -42% 0px", threshold: 0 });
+    }, { rootMargin: "-45% 0px -45% 0px", threshold: 0 });
     steps.forEach(function (s) { io.observe(s); });
   }
+  activate(steps[0]);
 
-  /* ---- routing ---- */
+  /* ---------- routing ---------- */
   function route() {
     var dash = location.hash.replace("#", "") === "dashboard";
     app.classList.toggle("on", dash);
     story.style.display = dash ? "none" : "";
-    document.body.style.background = dash ? "" : "#08182A";
+    document.body.style.background = dash ? "" : "#071627";
     if (dash) window.scrollTo(0, 0);
   }
   ["#open-dash", "#jump-dash"].forEach(function (sel) {
