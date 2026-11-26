@@ -328,6 +328,10 @@ footer .disclaimer{color:#5F6E7D;font-size:11.5px;line-height:1.55;max-width:98c
 /* Story: dark act, sticky visuals, layered parallax. */
 
 .story{position:relative;background:#071627;color:#E9F1F8;overflow-x:clip}
+.story-fx{position:fixed;inset:0;z-index:0;pointer-events:none}
+.story::before{content:"";position:fixed;inset:0;z-index:1;pointer-events:none;
+  background:linear-gradient(180deg,rgba(7,22,39,.30),rgba(7,22,39,.52) 55%,rgba(7,22,39,.62))}
+.s-hero,.scrolly,.s-cta{position:relative;z-index:2}
 .story .wrap{position:relative;z-index:3;width:100%}
 .s-mast{display:flex;align-items:center;gap:14px;padding:26px 0 0;position:relative;z-index:6}
 .s-mast .wordmark{font:700 19px/1 Montserrat,sans-serif;letter-spacing:.10em;color:#fff}
@@ -340,7 +344,7 @@ footer .disclaimer{color:#5F6E7D;font-size:11.5px;line-height:1.55;max-width:98c
 
 /* hero */
 .s-hero{position:relative;min-height:100svh;display:flex;align-items:center;padding:0 0 6vh;isolation:isolate;overflow:hidden}
-.hero-fx{position:absolute;inset:0;z-index:0;width:100%;height:100%;pointer-events:none}
+
 .ghost-fibers-container{position:relative;width:100%;height:100%;overflow:hidden}
 .ghost-fibers-canvas{position:absolute;inset:0;display:block;width:100%;height:100%}
 .hero-art{position:absolute;inset:0;z-index:1;overflow:hidden}
@@ -374,7 +378,8 @@ footer .disclaimer{color:#5F6E7D;font-size:11.5px;line-height:1.55;max-width:98c
 .vis-title .ic{width:18px;height:18px}
 .vis-note{font-size:12.5px;line-height:1.5;color:rgba(233,241,248,.62);max-width:42ch;margin:18px 0 0;align-self:flex-start}
 
-.mapwrap{width:100%;max-width:630px;aspect-ratio:1000/620}
+.mapwrap{width:100%;max-width:630px;aspect-ratio:1000/620;overflow:visible}
+.mapwrap svg{overflow:visible}
 .mapwrap svg{width:100%;height:100%;display:block}
 .mapwrap .swash{transition:opacity .65s ease}
 .mapwrap .dept{fill:rgba(255,255,255,.03);stroke:rgba(142,197,255,.55);stroke-width:1;transition:fill .2s}
@@ -404,14 +409,14 @@ footer .disclaimer{color:#5F6E7D;font-size:11.5px;line-height:1.55;max-width:98c
 
 /* steps */
 .steps{padding:14vh 0 18vh;mask-image:linear-gradient(180deg,transparent,#000 16%,#000 84%,transparent);
-  -webkit-mask-image:linear-gradient(180deg,transparent,#000 16%,#000 84%,transparent)}
+  -webkit-mask-image:linear-gradient(180deg,transparent,#000 26%,#000 74%,transparent)}
 .s-step{min-height:76svh;display:flex;flex-direction:column;justify-content:center;max-width:44ch;
   opacity:.3;transform:translateY(16px);transition:opacity .45s ease,transform .45s ease}
 .s-step.on{opacity:1;transform:none}
 .ic{width:17px;height:17px;flex:0 0 auto;stroke-width:1.9}
 .s-step .k{display:inline-flex;align-items:center;gap:9px;font:600 11px Inter,sans-serif;letter-spacing:.18em;text-transform:uppercase;color:#8EC5FF;margin:0 0 16px}
 .s-step h3{font:600 clamp(24px,2.15vw,32px)/1.22 Montserrat,sans-serif;letter-spacing:-.015em;margin:0 0 14px;color:#fff}
-.s-step p{font-size:16.5px;line-height:1.62;color:rgba(233,241,248,.8);margin:0 0 12px}
+.s-step p{font-size:16.5px;line-height:1.66;color:rgba(233,241,248,.92);margin:0 0 12px}
 
 /* cta */
 .s-cta{position:relative;text-align:center;padding:20vh 0 20vh;border-top:1px solid rgba(255,255,255,.09);overflow:hidden}
@@ -492,8 +497,8 @@ footer .disclaimer{color:#5F6E7D;font-size:11.5px;line-height:1.55;max-width:98c
   </div>
 </header>
 
+<div class="story-fx" id="bgfx-root" aria-hidden="true"></div>
 <section class="s-hero">
-  <div class="hero-fx" id="bgfx-root" aria-hidden="true"></div>
   <div class="hero-art" aria-hidden="true">
     <div class="art-layer art-contours" id="art-contours"></div>
     <div class="art-layer art-land" id="art-land"></div>
@@ -1623,25 +1628,6 @@ document.getElementById("sprite").innerHTML = "<symbol id=\"i-biomass\" viewBox=
     }, 160);
   });
 
-  /* ---------- parallax ---------- */
-  var art = [
-    { el: $("#art-contours"), rate: 0.16 },
-    { el: $("#art-land"), rate: 0.3 }
-  ];
-  var ticking = false;
-  function frame() {
-    var y = window.scrollY || 0;
-    if (!reduce) {
-      art.forEach(function (a) {
-        if (a.el) a.el.style.transform = "translate3d(0," + (-y * a.rate).toFixed(1) + "px,0)";
-      });
-    }
-    ticking = false;
-  }
-  window.addEventListener("scroll", function () {
-    if (!ticking) { ticking = true; requestAnimationFrame(frame); }
-  }, { passive: true });
-  frame();
 
   /* ---------- step observer ---------- */
   var steps = Array.prototype.slice.call(document.querySelectorAll(".s-step"));

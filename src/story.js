@@ -251,25 +251,6 @@
     }, 160);
   });
 
-  /* ---------- parallax ---------- */
-  var art = [
-    { el: $("#art-contours"), rate: 0.16 },
-    { el: $("#art-land"), rate: 0.3 }
-  ];
-  var ticking = false;
-  function frame() {
-    var y = window.scrollY || 0;
-    if (!reduce) {
-      art.forEach(function (a) {
-        if (a.el) a.el.style.transform = "translate3d(0," + (-y * a.rate).toFixed(1) + "px,0)";
-      });
-    }
-    ticking = false;
-  }
-  window.addEventListener("scroll", function () {
-    if (!ticking) { ticking = true; requestAnimationFrame(frame); }
-  }, { passive: true });
-  frame();
 
   /* ---------- step observer ---------- */
   var steps = Array.prototype.slice.call(document.querySelectorAll(".s-step"));
