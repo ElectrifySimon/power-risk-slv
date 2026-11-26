@@ -2,10 +2,57 @@ import React from "react";
 import { createRoot } from "react-dom/client";
 import { annotate } from "rough-notation";
 import { Highlighter } from "./Highlighter.tsx";
+import Silk from "./Silk.jsx";
+import TextType from "./TextType.jsx";
 
-const BLUE = "#8EC5FF";
+const bg = document.getElementById("bgfx-root");
+if (bg) {
+  createRoot(bg).render(
+    <Silk
+      speed={4}
+      scale={1.15}
+      color="#0B2740"
+      sheenColor="#8EC5FF"
+      noiseIntensity={1.2}
+      rotation={0.1}
+      sheen={0.35}
+      depth={0.45}
+      glow={0.28}
+      ripple={0.8}
+      wave={0.9}
+      variation={0.2}
+      mouseInteraction
+      interactionStrength={0.8}
+      clickRipple
+      intro
+      fade={0.1}
+      lightMode={false}
+    />
+  );
+}
 
-// Inline phrases: the MagicUI Highlighter component itself.
+const title = document.getElementById("hero-title");
+if (title) {
+  title.textContent = "";
+  createRoot(title).render(
+    <TextType
+      text="Power under pressure"
+      as="span"
+      typingSpeed={55}
+      initialDelay={300}
+      pauseDuration={0}
+      loop={false}
+      showCursor
+      hideCursorWhileTyping={false}
+      cursorCharacter="|"
+      cursorColor="#8EC5FF"
+      typeEffect="none"
+      startOnVisible={false}
+    />
+  );
+}
+
+// Inline phrases keep the MagicUI Highlighter component.
 document.querySelectorAll("[data-hl]").forEach((el) => {
   const text = el.textContent;
   const action = el.getAttribute("data-hl") || "highlight";
@@ -17,26 +64,18 @@ document.querySelectorAll("[data-hl]").forEach((el) => {
   );
 });
 
-// Whole blocks: same rough-notation engine the Highlighter wraps.
-function annotateBlock(el, action, color) {
-  if (!el || el.dataset.annotated) return;
+// Headings only: one marker band each, drawn once and kept.
+document.querySelectorAll(".s-step h3, .s-cta h2").forEach((el) => {
+  if (el.dataset.annotated) return;
   el.dataset.annotated = "1";
   const a = annotate(el, {
-    type: action,
-    color,
-    strokeWidth: action === "underline" ? 1.25 : 1.5,
+    type: "highlight",
+    color: "rgba(0,115,171,0.30)",
+    strokeWidth: 1,
     animationDuration: 900,
     iterations: 1,
-    padding: action === "underline" ? 2 : 6,
+    padding: 5,
     multiline: true,
   });
-  const io = new IntersectionObserver((entries) => {
-    entries.forEach((e) => {
-      if (e.isIntersecting) { a.show(); io.disconnect(); }
-    });
-  }, { rootMargin: "-12% 0px -12% 0px" });
-  io.observe(el);
-}
-
-document.querySelectorAll(".s-step h3, .s-cta h2").forEach((el) => annotateBlock(el, "highlight", "rgba(0,115,171,0.34)"));
-document.querySelectorAll(".s-step p, .s-hero .s-stand, .s-cta p").forEach((el) => annotateBlock(el, "underline", "rgba(142,197,255,0.6)"));
+  a.show();
+});
