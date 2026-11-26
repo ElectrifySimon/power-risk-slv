@@ -49,3 +49,11 @@ Notes:
 - Symptom: a vertical scrollbar in the dashboard tab row (Risk results / Measures / Method / Register).
 - Cause: `.tabs` used `overflow:auto` with `.tab{margin-bottom:-1px}`, so the strip had 1px of vertical overflow and Chromium drew a scrollbar.
 - Fix: no scroll container. `.tabs` is `flex-wrap:wrap; overflow:visible`; at 390px the tabs wrap to two rows with no horizontal overflow. Active underline sits on the rule again.
+
+## 26 November 2026 - single JSON data layer
+
+- data/power-risk-slv.json is now the only data file: meta, periods, categories, hazards, assets, definitions, counts N and MW, measures, projected department geometry, and a derived block with every figure the narrative quotes.
+- data/slv.json removed; its content lives inside the single file. scripts/build_data.py refreshes the derived block and projection from that same file plus geo/slv_adm1.geojson.
+- build.py loads one file and substitutes {{token}} figures into story.html from DATA.derived, so numbers in prose cannot drift from the tables.
+- Register download switched from CSV to one JSON (el_salvador_power_risk.json) carrying counts, measures, derived figures and the register rows on screen.
+- Verified: live page label Download JSON, payload 43,361 bytes, 136 register rows, 10 top-level keys, no console errors; story figures equal to the previous hardcoded text.
