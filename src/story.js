@@ -113,24 +113,26 @@
     $("#wf-title").textContent = d.title;
     $("#wf-note").textContent = d.note;
     var c = chart("waffle"); if (!c) return;
-    var cols = 16, rows = 10, data = [], i = 0;
-    d.arr.forEach(function (n, ci) {
-      for (var k = 0; k < n; k++) {
-        var j = i++; if (j >= cols * rows) break;
-        data.push({ value: [j % cols, Math.floor(j / cols)], itemStyle: { color: CLASSCOL[ci] } });
-      }
-    });
+    var cols = 16, rows = 10, total = d.arr.reduce(function (a, b) { return a + b; }, 0);
+    var data = [];
+    for (var j = 0; j < total; j++) {
+      var acc = 0, ci = 0;
+      for (var k = 0; k < 4; k++) { acc += d.arr[k]; if (j < acc) { ci = k; break; } }
+      data.push({ value: [j % cols, Math.floor(j / cols)], itemStyle: { color: CLASSCOL[ci] } });
+    }
     var el = document.getElementById("waffle");
     var w = (el && el.clientWidth) || 420;
     var cell = Math.max(8, Math.floor((w - (cols - 1) * 5) / cols));
     c.setOption({
-      animation: ANIM, animationDuration: 600, animationEasing: "cubicOut",
+      animation: ANIM, animationDuration: 650, animationDurationUpdate: 900,
+      animationEasing: "cubicOut", animationEasingUpdate: "cubicInOut",
       animationDelay: function (idx) { return idx * 4; },
+      animationDelayUpdate: function (idx) { return idx * 3; },
       grid: { left: 0, right: 0, top: 0, bottom: 0 },
       xAxis: { type: "value", min: -0.5, max: cols - 0.5, show: false },
       yAxis: { type: "value", min: -0.5, max: rows - 0.5, inverse: true, show: false },
       series: [{ type: "scatter", symbol: "rect", symbolSize: cell - 4, silent: true, data: data }]
-    }, true);
+    });
   }
 
   function buildPlants() {
@@ -166,7 +168,8 @@
     var c = chart("solarbars"); if (!c) return;
     var names = ["Low", "Moderate", "High", "Critical"];
     c.setOption({
-      animation: ANIM, animationDuration: 800, animationEasing: "cubicOut",
+      animation: ANIM, animationDuration: 800, animationDurationUpdate: 900,
+      animationEasing: "cubicOut", animationEasingUpdate: "cubicInOut",
       grid: { left: 4, right: 8, top: 8, bottom: 22, containLabel: true },
       tooltip: { trigger: "axis", axisPointer: { type: "shadow" }, backgroundColor: "rgba(7,22,39,.94)",
         borderColor: "rgba(142,197,255,.3)", textStyle: { color: "#E9F1F8", fontSize: 12 } },
@@ -178,7 +181,7 @@
         return { name: n, type: "bar", stack: "risk", barWidth: 22, data: [A[i], B[i]],
           itemStyle: { color: CLASSCOL[i], borderRadius: i === 3 ? [0, 3, 3, 0] : 0 } };
       })
-    }, true);
+    });
   }
 
   var rt;
