@@ -1,7 +1,5 @@
 import React from "react";
 import { createRoot } from "react-dom/client";
-import { annotate } from "rough-notation";
-import { Highlighter } from "./Highlighter.tsx";
 import Silk from "./Silk.jsx";
 import TextType from "./TextType.jsx";
 
@@ -52,33 +50,52 @@ if (title) {
   );
 }
 
-// Inline phrases keep the MagicUI Highlighter component.
-document.querySelectorAll("[data-hl]").forEach((el) => {
-  const text = el.textContent;
-  const action = el.getAttribute("data-hl") || "highlight";
-  const color = el.getAttribute("data-hl-color") || "rgba(255,186,110,0.34)";
-  createRoot(el).render(
-    <Highlighter action={action} color={color} strokeWidth={1.6} animationDuration={900} iterations={1} padding={3} multiline>
-      {text}
-    </Highlighter>
-  );
+const HEADS = [];
+document.querySelectorAll(".s-step h3, .s-cta h2").forEach((el) => {
+  if (el.dataset.band) return;
+  el.dataset.band = "1";
+  HEADS.push(el);
 });
 
-// Headings only: one marker band each, drawn once and kept.
-document.querySelectorAll(".s-step h3, .s-cta h2").forEach((el) => {
-  if (el.dataset.annotated) return;
-  el.dataset.annotated = "1";
-  const a = annotate(el, {
-    type: "highlight",
-    color: "rgba(255,186,110,0.32)",
-    strokeWidth: 1,
-    animationDuration: 900,
-    iterations: 1,
-    padding: 5,
-    multiline: true,
+function drawBand(el) {
+  let svg = el.querySelector("svg.ul-band");
+  if (!svg) {
+    svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    svg.setAttribute("class", "ul-band");
+    svg.setAttribute("aria-hidden", "true");
+    el.prepend(svg);
+  }
+  const box = el.getBoundingClientRect();
+  svg.style.width = "100%";
+  svg.style.height = "100%";
+  svg.innerHTML = "";
+  const range = document.createRange();
+  range.selectNodeContents(el);
+  [...range.getClientRects()].forEach((r, i) => {
+    if (r.width < 4) return;
+    const x = r.left - box.left - 4;
+    const y = r.top - box.top + 2;
+    const w = r.width + 8;
+    const h = r.height - 2;
+    const rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+    rect.setAttribute("x", x);
+    rect.setAttribute("y", y);
+    rect.setAttribute("width", w);
+    rect.setAttribute("height", h);
+    rect.setAttribute("rx", 5);
+    rect.setAttribute("fill", "rgba(255,186,110,0.28)");
+    rect.style.transformOrigin = `${x}px center`;
+    rect.style.transform = "scaleX(0)";
+    rect.style.transition = `transform 720ms cubic-bezier(.22,.9,.24,1) ${i * 80}ms`;
+    svg.appendChild(rect);
+    requestAnimationFrame(() => requestAnimationFrame(() => { rect.style.transform = "scaleX(1)"; }));
   });
-  a.show();
-});
+}
+
+function drawAllBands() { HEADS.forEach(drawBand); }
+drawAllBands();
+if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => setTimeout(drawAllBands, 80));
+window.addEventListener("resize", () => setTimeout(drawAllBands, 120));
 
 // Targeted underlines: explicit phrase list, longest first, one per block.
 const PHRASES = [
@@ -126,9 +143,8 @@ function drawUnderline(block, span) {
     svg.setAttribute("aria-hidden", "true");
     block.appendChild(svg);
   }
-  svg.setAttribute("viewBox", `0 0 ${Math.max(1, box.width)} ${Math.max(1, box.height)}`);
-  svg.setAttribute("width", box.width);
-  svg.setAttribute("height", box.height);
+  svg.style.width = "100%";
+  svg.style.height = "100%";
   svg.innerHTML = "";
   [...span.getClientRects()].forEach((r, i) => {
     const x1 = r.left - box.left + 1;
@@ -172,5 +188,10 @@ function drawVisible() {
 }
 
 drawVisible();
+if (window.ResizeObserver) {
+  const ro = new ResizeObserver(() => UL.forEach((t) => { if (t.done) drawUnderline(t.block, t.span); }));
+  UL.forEach((t) => ro.observe(t.block));
+}
+if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => setTimeout(() => UL.forEach((t) => { if (t.done) drawUnderline(t.block, t.span); }), 100));
 window.addEventListener("scroll", () => requestAnimationFrame(drawVisible), { passive: true });
 window.addEventListener("resize", () => UL.forEach((t) => { if (t.done) drawUnderline(t.block, t.span); }));

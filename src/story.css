@@ -251,3 +251,10 @@ body.dashmode body.dashmode #story{display:none}
 .s-step p,.s-cta p,.s-hero .s-stand{position:relative}
 svg.ul-line{position:absolute;inset:0;pointer-events:none;overflow:visible;z-index:0}
 .s-step p>*,.s-cta p>*,.s-hero .s-stand>*{position:relative;z-index:1}
+
+.s-step,.s-cta{position:relative}
+.s-step h3,.s-cta h2{position:relative}
+
+svg.ul-band{position:absolute;inset:0;pointer-events:none;overflow:visible;z-index:0}
+.s-step h3,.s-cta h2{position:relative}
+.s-step h3>span,.s-cta h2>span{position:relative;z-index:1}
