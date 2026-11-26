@@ -81,8 +81,7 @@ def load_geo():
 
 
 def icon_sprite():
-    base = os.path.expanduser(
-        "~/.hermes/skills/software-development/static-tracker-site/assets/irena/icons")
+    base = os.path.join(ROOT, "vendor", "icons")
     out = []
     for f in sorted(os.listdir(base)):
         if not f.endswith(".svg"):

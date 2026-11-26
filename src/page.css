@@ -257,3 +257,62 @@ footer .disclaimer{color:#5F6E7D;font-size:11.5px;line-height:1.55;max-width:98c
   .tblwrap{max-height:none;overflow:visible}
   h1{font-size:30pt}
 }
+
+
+/* ---------- iconography ---------- */
+.ic{width:16px;height:16px;stroke-width:1.9;flex:0 0 auto;vertical-align:-2px}
+.tab{display:inline-flex;align-items:center;gap:8px}
+.tab .ic{width:16px;height:16px;opacity:.72}
+.tab[aria-selected=true] .ic{opacity:1;color:var(--brand)}
+.seg button .ic{width:15px;height:15px}
+.back{display:inline-flex;align-items:center;gap:8px}
+.kpi{position:relative;padding-top:16px}
+.kpi .kico{position:absolute;top:12px;right:13px;color:var(--brand);opacity:.85;line-height:0}
+.kpi .kico .ic{width:18px;height:18px;stroke-width:1.7}
+.tbl .hazc{display:inline-flex;align-items:center;gap:7px;white-space:nowrap}
+.tbl .hazc .ic{width:14px;height:14px;color:var(--muted);stroke-width:1.7}
+
+/* ---------- responsive ---------- */
+@media (max-width:1024px){
+  .hero{grid-template-columns:1fr;gap:26px}
+  .kpis{grid-template-columns:repeat(2,1fr)}
+  .mapcard{grid-template-columns:1fr}
+}
+@media (max-width:720px){
+  .tabrow{flex-wrap:wrap;gap:8px}
+  .tabs{width:100%;overflow:auto}
+  .tab{padding:11px 10px;font-size:13px}
+  .tab .ic{width:15px;height:15px}
+  .tabrow .btn{width:100%;justify-content:center}
+  .kpis{grid-template-columns:1fr 1fr;gap:8px}
+  .kpi{padding:13px 12px 13px}
+  .kpi .v{font-size:23px}
+  .kpi .l{font-size:10px;letter-spacing:.05em}
+  .kpi .c{font-size:11px}
+  .kpi .kico{top:10px;right:11px}
+  .kpi .kico .ic{width:16px;height:16px}
+  .fieldrow{flex-direction:column;align-items:stretch;gap:12px}
+  .tblwrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .tbl{min-width:680px}
+  .chain{grid-template-columns:1fr}
+  .chain .op{justify-self:center;transform:rotate(90deg)}
+  .calc{grid-template-columns:1fr}
+}
+@media (max-width:420px){
+  .kpis{grid-template-columns:1fr}
+}
+
+/* KPI revision: inline icon, share bar */
+.kpi .kico{display:none}
+.kpi .l{display:flex;align-items:center;gap:7px}
+.kpi .l .ic{width:15px;height:15px;color:var(--brand);stroke-width:1.8}
+.kpi .v{margin:9px 0 8px}
+.kpi .kbar{display:block;height:4px;border-radius:2px;background:var(--surface2);overflow:hidden;margin:0 0 9px}
+.kpi .kbar i{display:block;height:100%;border-radius:2px;background:linear-gradient(90deg,#2C7CAE,#0073AB)}
+.kpi .c{color:#4A5A68}
+@media (max-width:560px){
+  .mast .edition,.mast .sep{display:none}
+  .mast{gap:10px;padding-top:16px}
+  .mast .org{font-size:10.5px;letter-spacing:.06em}
+  .mast .right{margin-left:auto}
+}

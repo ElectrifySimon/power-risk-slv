@@ -19,105 +19,111 @@
     <div class="s-meta">
       <span>5&nbsp;184 assets</span><span>3 hazards</span><span>2 periods</span>
     </div>
+    <span class="s-scroll" aria-hidden="true">Scroll to read</span>
   </div>
-  <span class="s-scroll" aria-hidden="true">Scroll</span>
 </section>
 
 <section class="scrolly" id="scrolly">
   <div class="stage">
     <div class="stage-inner" id="stageinner">
       <div class="vis on" data-vis="map">
-        <p class="vis-title" id="map-title">Indicative pattern of change</p>
+        <p class="vis-title"><svg class="ic" aria-hidden="true"><use href="#i-grid"/></svg><span id="map-title">Indicative pattern of change</span></p>
         <div class="mapwrap" id="stage-map"></div>
         <div class="mapkey"><span>Less change</span><i id="mapramp"></i><span>More change</span></div>
       </div>
       <div class="vis" data-vis="waffle">
-        <p class="vis-title" id="wf-title">159 substations</p>
+        <p class="vis-title"><svg class="ic" aria-hidden="true"><use href="#i-substation"/></svg><span id="wf-title">159 substations</span></p>
         <div class="waffle" id="waffle"></div>
-        <div class="vlegend"><span><i style="background:#9FB3C6"></i>Low</span><span><i style="background:#93AFC8"></i>Moderate</span><span><i style="background:#0073AB"></i>High</span><span><i style="background:#B03218"></i>Critical</span></div>
+        <div class="vlegend"><span><i style="background:#C8D4DF"></i>Low</span><span><i style="background:#8FB4CE"></i>Moderate</span><span><i style="background:#0073AB"></i>High</span><span><i style="background:#B03218"></i>Critical</span></div>
         <p class="vis-note" id="wf-note"></p>
       </div>
       <div class="vis" data-vis="hydro">
-        <p class="vis-title">19 hydropower plants</p>
+        <p class="vis-title"><svg class="ic" aria-hidden="true"><use href="#i-hydro"/></svg>19 hydropower plants</p>
         <div class="plants" id="plants"></div>
         <div class="vlegend"><span><i style="background:#B03218"></i>High or critical drought risk</span><span><i style="background:rgba(233,241,248,.28)"></i>Lower risk</span></div>
         <p class="vis-note">Each square is one plant. Dark squares are at high or critical drought risk.</p>
       </div>
       <div class="vis" data-vis="solar">
-        <p class="vis-title">1&nbsp;941 solar PV installations</p>
+        <p class="vis-title"><svg class="ic" aria-hidden="true"><use href="#i-solar"/></svg>1&nbsp;941 solar PV installations</p>
         <div class="solarbars" id="solarbars"></div>
-        <div class="vlegend"><span><i style="background:#9FB3C6"></i>Low</span><span><i style="background:#93AFC8"></i>Moderate</span><span><i style="background:#0073AB"></i>High</span><span><i style="background:#B03218"></i>Critical</span></div>
+        <div class="vlegend"><span><i style="background:#C8D4DF"></i>Low</span><span><i style="background:#8FB4CE"></i>Moderate</span><span><i style="background:#0073AB"></i>High</span><span><i style="background:#B03218"></i>Critical</span></div>
         <p class="vis-note">Share of installations by heatwave risk, near term and by mid-century.</p>
+      </div>
+      <div class="vis" data-vis="towers">
+        <p class="vis-title"><svg class="ic" aria-hidden="true"><use href="#i-tower"/></svg>3&nbsp;026 transmission towers</p>
+        <div class="towers" id="towers"></div>
+        <div class="vlegend"><span><i style="background:#C8D4DF"></i>Low</span><span><i style="background:#8FB4CE"></i>Moderate</span><span><i style="background:#0073AB"></i>High</span></div>
+        <p class="vis-note">Near term, 220 towers at high or critical flood risk (7%). By 2041&ndash;2070, 978 (32%).</p>
       </div>
     </div>
   </div>
 
   <div class="steps" id="steps">
     <article class="s-step on" data-vis="map" data-haz="flood">
-      <span class="k">The country</span>
+      <span class="k"><svg class="ic" aria-hidden="true"><use href="#i-story"/></svg>The country</span>
       <h3>A small country on the front line</h3>
       <p>El Salvador is the smallest and most densely populated country in Central America. It sits in the Central American Dry Corridor and in the path of tropical storms.</p>
       <p>Hurricane Mitch in 1998, Tropical Storm Agatha in 2010 and Tropical Storm Amanda in 2020 all caused flooding and landslides that damaged infrastructure and cut power.</p>
     </article>
 
     <article class="s-step" data-vis="map" data-haz="flood">
-      <span class="k">Floods</span>
+      <span class="k"><svg class="ic" aria-hidden="true"><use href="#i-flood"/></svg>Floods</span>
       <h3>Heavier rain, mostly in the east</h3>
       <p>Maximum five-day rainfall, the indicator used for flood threat, rises over the century. It rises most in the eastern and central regions.</p>
     </article>
 
     <article class="s-step" data-vis="map" data-haz="drought">
-      <span class="k">Droughts</span>
+      <span class="k"><svg class="ic" aria-hidden="true"><use href="#i-drought"/></svg>Droughts</span>
       <h3>Longer dry spells in the south and east</h3>
       <p>The number of consecutive dry days increases, especially in the south and east. This affects water for hydropower, cooling at thermal plants and the crops that feed biomass plants.</p>
     </article>
 
     <article class="s-step" data-vis="map" data-haz="heat">
-      <span class="k">Heatwaves</span>
+      <span class="k"><svg class="ic" aria-hidden="true"><use href="#i-heat"/></svg>Heatwaves</span>
       <h3>Very hot days everywhere</h3>
       <p>The number of very hot days rises sharply across the whole country, most in the south. Average temperatures could rise by 1.5&ndash;2.5&nbsp;&deg;C by mid-century.</p>
     </article>
 
     <article class="s-step" data-vis="waffle" data-waffle="s">
-      <span class="k">Method</span>
+      <span class="k"><svg class="ic" aria-hidden="true"><use href="#i-method"/></svg>Method</span>
       <h3>From hazard maps to asset risk</h3>
       <p>IRENA&rsquo;s Climate Risk Assessment Tool combines the climate projections with the location of every asset, and with how sensitive each asset type is and how well it can adapt. Every asset gets a risk score for each hazard and period: low, moderate, high or critical.</p>
     </article>
 
     <article class="s-step" data-vis="waffle" data-waffle="s">
-      <span class="k">Substations &middot; near term</span>
+      <span class="k"><svg class="ic" aria-hidden="true"><use href="#i-substation"/></svg>Substations &middot; near term</span>
       <h3>More than half of substations already at high flood risk</h3>
       <p>Of the country&rsquo;s 159 substations, 89 (56%) face high or critical flood risk in the near term, 16 of them critical.</p>
     </article>
 
     <article class="s-step" data-vis="waffle" data-waffle="m">
-      <span class="k">Substations &middot; mid-century</span>
+      <span class="k"><svg class="ic" aria-hidden="true"><use href="#i-substation"/></svg>Substations &middot; mid-century</span>
       <h3>Four in five by mid-century</h3>
       <p>By 2041&ndash;2070 this rises to 128 substations (81%), with 47 at critical risk. For transmission substations, the backbone of the grid, it reaches 90%.</p>
     </article>
 
     <article class="s-step" data-vis="waffle" data-waffle="heat">
-      <span class="k">Heat</span>
+      <span class="k"><svg class="ic" aria-hidden="true"><use href="#i-heat"/></svg>Heat</span>
       <h3>Every substation feels the heat</h3>
       <p>Heat puts transformers under stress. In the near term, 14 substations face high heatwave risk. By mid-century, all 159 do.</p>
     </article>
 
     <article class="s-step" data-vis="hydro">
-      <span class="k">Hydropower</span>
+      <span class="k"><svg class="ic" aria-hidden="true"><use href="#i-hydro"/></svg>Hydropower</span>
       <h3>Hydropower depends on rain</h3>
       <p>10 of the 19 hydropower plants face high or critical drought risk in both periods. Most are smaller plants.</p>
       <p>The large reservoirs on the Lempa river rely on sub-basins that extend into Guatemala and Honduras. Planning for them has to look beyond the border.</p>
     </article>
 
     <article class="s-step" data-vis="solar">
-      <span class="k">Solar PV</span>
+      <span class="k"><svg class="ic" aria-hidden="true"><use href="#i-solar"/></svg>Solar PV</span>
       <h3>Solar panels lose efficiency in the heat</h3>
       <p>The country has 1&nbsp;941 solar PV installations, most of them small distributed systems. Today, 14% face moderate heatwave risk.</p>
       <p>By mid-century, almost all of them do, and the panels themselves lose output as temperatures climb.</p>
     </article>
 
-    <article class="s-step" data-vis="waffle" data-waffle="m">
-      <span class="k">Transmission</span>
+    <article class="s-step" data-vis="towers">
+      <span class="k"><svg class="ic" aria-hidden="true"><use href="#i-tower"/></svg>Transmission</span>
       <h3>Towers follow the same curve</h3>
       <p>Transmission towers at high or critical flood risk rise from 7% to 32%, and 978 of the 3&nbsp;026 towers reach that level by 2041&ndash;2070.</p>
     </article>

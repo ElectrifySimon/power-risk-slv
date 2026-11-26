@@ -36,3 +36,11 @@ Notes:
 - Charts: substation waffle (scatter on a grid, staggered 4 ms per cell), hydropower grid (22 ms per plant), solar stacked bars across the two periods. Lazy-initialised on step activation so the reveal animation plays when the reader arrives, not off-screen at load.
 - Legends added under each chart; waffle widened to 470px.
 - Verified: no console errors, three canvases at 470x300 / 320x170 / 460x170, 94k-122k pixels change between frames 600 ms apart on entry.
+
+## 26 November 2026 - icons, towers, responsive
+
+- Icon set: 18 line icons in vendor/icons, 24x24 stroke, built into the sprite and used in story kickers, chart titles, KPI labels, tabs, hazard controls and register rows.
+- Towers step now has its own chart: share at high or critical flood risk, 7% (220 of 3 026) to 32% (978), labelled with both the share and the count. Earlier it reused the substations waffle.
+- KPI cards carry an icon beside the label, a share bar under the value, darker context text.
+- Responsive: no document overflow at 390 / 768 / 1024 / 1440. Charts re-fit on container resize through ResizeObserver plus a deferred redraw after activation (fixed 100px-wide canvases on mobile).
+- Hero: country art fits the frame, copy centred, scroll cue moved into the text column.

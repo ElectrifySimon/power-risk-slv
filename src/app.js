@@ -95,10 +95,10 @@
   function renderKPIs() {
     var h = S.haz, gen = ASSETS.filter(function (a) { return a.g === "gen"; }).map(function (a) { return a.id; });
     var defs = [
-      ["Generation assets", gen, N],
-      ["Generation capacity", gen, MWt],
-      ["Substations", ["tsub", "dsub"], N],
-      ["Transmission towers", ["tower"], N]
+      ["Generation assets", gen, N, "capacity"],
+      ["Generation capacity", gen, MWt, "grid"],
+      ["Substations", ["tsub", "dsub"], N, "substation"],
+      ["Transmission towers", ["tower"], N, "tower"]
     ];
     var box = $("#kpis"); box.innerHTML = "";
     defs.forEach(function (d) {
@@ -112,7 +112,9 @@
       }
       var el = document.createElement("div");
       el.className = "kpi";
-      el.innerHTML = '<p class="v">' + v + '</p><p class="l">' + d[0] + '</p><p class="c">' + c + "</p>";
+      el.innerHTML = '<p class="l"><svg class="ic" aria-hidden="true"><use href="#i-' + d[3] + '"/></svg>' + d[0] + "</p>" +
+        '<p class="v">' + v + '</p><span class="kbar"><i style="width:' + Math.max(2, Math.min(100, parseFloat(v))) + '%"></i></span>' +
+        '<p class="c">' + c + "</p>";
       box.appendChild(el);
     });
     var total = 0;
@@ -393,7 +395,8 @@
     var frag = document.createDocumentFragment();
     rows.forEach(function (r) {
       var tr = document.createElement("tr");
-      tr.innerHTML = "<td>" + r.group.replace("Transmission and distribution", "T&amp;D") + "</td><td>" + r.asset + "</td><td>" + r.haz +
+      tr.innerHTML = "<td>" + r.group.replace("Transmission and distribution", "T&amp;D") + "</td><td>" + r.asset + "</td><td>" +
+        '<span class="hazc"><svg class="ic" aria-hidden="true"><use href="#i-' + r.hazk + '"/></svg>' + r.haz + "</span>" +
         "</td><td>" + r.per + '</td><td><span class="cls"><i style="background:' + COL[CLS[r.clsi]] + '"></i>' + r.cls + "</span></td>" +
         '<td class="num">' + (r.n ? fmtN(r.n) : '<span class="none">0</span>') + "</td>" +
         '<td class="num">' + (r.mw == null ? '<span class="none">n/a</span>' : fmtMW(r.mw)) + "</td>";
@@ -436,7 +439,7 @@
       var b = document.createElement("button");
       b.type = "button";
       b.setAttribute("aria-pressed", S[key] === o.v);
-      b.innerHTML = (o.dot ? '<span class="dot" style="background:' + o.dot + '"></span>' : "") + o.t;
+      b.innerHTML = (o.icon ? '<svg class="ic" aria-hidden="true"><use href="#i-' + o.icon + '"/></svg>' : (o.dot ? '<span class="dot" style="background:' + o.dot + '"></span>' : "")) + "<span>" + o.t + "</span>";
       b.onclick = function () {
         S[key] = o.v;
         Array.prototype.forEach.call(c.children, function (x) { x.setAttribute("aria-pressed", x === b); });
@@ -451,7 +454,7 @@
 
   buildMap();
   buildRows();
-  segment("#c-haz", Object.keys(HAZ).map(function (h) { return { v: h, t: HAZ[h].name, dot: HAZCOL[h] }; }), "haz", renderAll);
+  segment("#c-haz", Object.keys(HAZ).map(function (h) { return { v: h, t: HAZ[h].name, icon: h }; }), "haz", renderAll);
   segment("#c-per", [{ v: "c", t: "Compare" }, { v: "s", t: PER.s }, { v: "m", t: PER.m }], "per", renderAll);
   segment("#c-met", [{ v: "n", t: "Number of assets" }, { v: "mw", t: "Capacity (MW)" }], "met", renderAll);
 

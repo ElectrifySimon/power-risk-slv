@@ -29,7 +29,7 @@
     target.innerHTML = '<svg viewBox="0 0 ' + w + " " + h + '" preserveAspectRatio="xMidYMid slice" aria-hidden="true">' +
       '<g fill="none" stroke="rgba(142,197,255,.13)" stroke-width="1">' + out + "</g></svg>";
   }
-  landSvg($("#art-land"), "rgba(142,197,255,.75)", 1.7, 1);
+  landSvg($("#art-land"), "rgba(142,197,255,.92)", 2, 1);
   contours($("#art-contours"));
 
   /* ---------- stage map ---------- */
@@ -92,7 +92,7 @@
     heat: { arr: totals("heat", "m", SUBS), title: "159 substations", note: "2041\u20132070: all 159 at high or critical heatwave risk, against 14 in the near term." }
   };
   /* ---------- ECharts ---------- */
-  var CLASSCOL = ["#9FB3C6", "#93AFC8", "#0073AB", "#B03218"];
+  var CLASSCOL = ["#C8D4DF", "#8FB4CE", "#0073AB", "#B03218"];
   var CHARTS = {};
   var ANIM = !reduce && !!window.echarts;
 
@@ -184,12 +184,49 @@
     });
   }
 
+  function buildTowers() {
+    var near = totals("flood", "s", ["tower"]), mid = totals("flood", "m", ["tower"]);
+    var tot = function (a) { return a.reduce(function (x, y) { return x + y; }, 0); };
+    var hn = near[2] + near[3], hm = mid[2] + mid[3], tn = tot(near), tm = tot(mid);
+    var c = chart("towers"); if (!c) return;
+    var lbl = function (n, t) { return Math.round((n / t) * 100) + "%  \u00b7  " + n + " of " + t; };
+    c.setOption({
+      animation: ANIM, animationDuration: 750, animationDurationUpdate: 900,
+      animationEasing: "cubicOut", animationEasingUpdate: "cubicInOut",
+      grid: { left: 4, right: 118, top: 10, bottom: 26, containLabel: true },
+      tooltip: { trigger: "axis", axisPointer: { type: "shadow" }, backgroundColor: "rgba(7,22,39,.94)",
+        borderColor: "rgba(142,197,255,.3)", textStyle: { color: "#E9F1F8", fontSize: 12 } },
+      xAxis: { type: "value", max: 100, axisLabel: { color: "rgba(233,241,248,.6)", fontSize: 10, formatter: "{value}%" },
+        splitLine: { lineStyle: { color: "rgba(255,255,255,.07)" } }, axisLine: { show: false } },
+      yAxis: { type: "category", data: ["2041\u20132070", "2015\u20132044"],
+        axisLabel: { color: "rgba(233,241,248,.8)", fontSize: 11.5 }, axisTick: { show: false }, axisLine: { show: false } },
+      series: [
+        { name: "track", type: "bar", barWidth: 26, silent: true, data: [100, 100], barGap: "-100%",
+          itemStyle: { color: "rgba(255,255,255,.07)", borderRadius: 4 }, z: 1, animation: false },
+        { name: "High or critical", type: "bar", barWidth: 26, data: [
+            { value: Math.round((hm / tm) * 100), label: { formatter: lbl(hm, tm) } },
+            { value: Math.round((hn / tn) * 100), label: { formatter: lbl(hn, tn) } }
+          ],
+          itemStyle: { color: "#0073AB", borderRadius: 4 },
+          label: { show: true, position: "right", color: "#E9F1F8", fontSize: 11.5, fontWeight: 600 }, z: 2 }
+      ]
+    });
+  }
+
+  if ("ResizeObserver" in window) {
+    var ro = new ResizeObserver(function () { Object.keys(CHARTS).forEach(function (k) { CHARTS[k].resize(); }); });
+    ["waffle", "plants", "solarbars", "towers"].forEach(function (id) {
+      var el = document.getElementById(id); if (el) ro.observe(el);
+    });
+  }
+
   var rt;
   window.addEventListener("resize", function () {
     clearTimeout(rt);
     rt = setTimeout(function () {
       Object.keys(CHARTS).forEach(function (k) { CHARTS[k].resize(); });
       buildWaffle(lastWf);
+      buildTowers();
     }, 160);
   });
 
@@ -225,9 +262,19 @@
       var mt = $("#map-title");
       if (mt) mt.textContent = "Indicative pattern of change \u00b7 " + (step.dataset.haz || "flood") + "s";
     }
-    if (v === "waffle") buildWaffle(step.dataset.waffle || "s");
-    if (v === "hydro") buildPlants();
-    if (v === "solar") buildSolar();
+    var wfKey = step.dataset.waffle || "s";
+    var draw = function () {
+      if (!document.querySelector('.vis.on[data-vis="' + v + '"]')) return;
+      if (v === "waffle") buildWaffle(wfKey);
+      if (v === "hydro") buildPlants();
+      if (v === "solar") buildSolar();
+      if (v === "towers") buildTowers();
+      setTimeout(function () {
+        Object.keys(CHARTS).forEach(function (k) { CHARTS[k].resize(); });
+      }, 120);
+    };
+    requestAnimationFrame(function () { requestAnimationFrame(draw); });
+    setTimeout(draw, 120);
   }
   if ("IntersectionObserver" in window) {
     var io = new IntersectionObserver(function (entries) {
