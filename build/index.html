@@ -270,7 +270,7 @@ footer .disclaimer{color:#5F6E7D;font-size:11.5px;line-height:1.55;max-width:98c
 .ic{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;
   stroke-linejoin:round;flex:0 0 auto;vertical-align:-2px}
 .tab{display:inline-flex;align-items:center;gap:8px}
-.tab .ic{width:18px;height:18px;flex:0 0 18px}
+.tab .ic{width:20px;height:20px;flex:0 0 20px}
 .tab[aria-selected=true] .ic{opacity:1;color:var(--brand)}
 .seg button .ic{width:15px;height:15px}
 .back{display:inline-flex;align-items:center;gap:8px}
@@ -290,7 +290,7 @@ footer .disclaimer{color:#5F6E7D;font-size:11.5px;line-height:1.55;max-width:98c
   .tabrow{flex-wrap:wrap;gap:8px}
   .tabs{width:100%;overflow:auto}
   .tab{padding:11px 10px;font-size:13px}
-  .tab .ic{width:18px;height:18px;flex:0 0 18px}
+  .tab .ic{width:20px;height:20px;flex:0 0 20px}
   .tabrow .btn{width:100%;justify-content:center}
   .kpis{grid-template-columns:1fr 1fr;gap:8px}
   .kpi{padding:13px 12px 13px}
@@ -325,9 +325,12 @@ footer .disclaimer{color:#5F6E7D;font-size:11.5px;line-height:1.55;max-width:98c
   .mast .org{font-size:10.5px;letter-spacing:.06em}
   .mast .right{margin-left:auto}
 }
-.tab .ic{stroke-width:2}
+.tab .ic{width:20px;height:20px;flex:0 0 20px}
 .tab[aria-selected=false]{color:#5B6B7A}
 .tab[aria-selected=false] .ic{opacity:1}
+
+.vh{display:flex;align-items:center;gap:10px}
+.vh .ic{width:22px;height:22px;color:var(--brand);flex:0 0 22px}
 /* Story: dark act, sticky visuals, layered parallax. */
 
 .story{position:relative;background:#071627;color:#E9F1F8;overflow-x:clip}
@@ -822,7 +825,7 @@ svg.ul-band{position:absolute;inset:0;pointer-events:none;overflow:visible;z-ind
   <!-- measures -->
   <section class="view" id="view-measures" role="tabpanel" aria-labelledby="tab-measures">
     <div class="panel">
-      <h2>Resilience measures by asset and hazard</h2>
+      <h2 class="vh"><svg class="ic" aria-hidden="true"><use href="#i-capacity"/></svg>Resilience measures by asset and hazard</h2>
       <p class="lede">A menu of options, not a prescription. Each card gives the potential impacts and the measures available for one asset group and hazard, with the share of assets at high or critical risk in 2041&ndash;2070. Measures are prioritised on risk, asset criticality, feasibility, cost and co-benefits.</p>
       <div class="fieldrow">
         <div class="grp"><span class="lab">Asset group</span><div class="chips" id="m-asset"></div></div>
@@ -835,7 +838,7 @@ svg.ul-band{position:absolute;inset:0;pointer-events:none;overflow:visible;z-ind
   <!-- method -->
   <section class="view" id="view-method" role="tabpanel" aria-labelledby="tab-method">
     <div class="panel">
-      <h2>How climate risk is calculated</h2>
+      <h2 class="vh"><svg class="ic" aria-hidden="true"><use href="#i-method"/></svg>How climate risk is calculated</h2>
       <p class="lede">The assessment applies the IPCC risk framework to every asset, for each hazard and period. Hazard is banded by percentile at the asset location, exposure is set by the asset sitting where the hazard occurs, and vulnerability is the ratio of sensitivity to adaptive capacity.</p>
       <div class="chain">
         <div class="step"><b>Hazard</b><span>Hazard value at the asset location, banded by percentile: Low 0.4, Moderate 0.8, High 1.0.</span></div>
@@ -877,7 +880,7 @@ svg.ul-band{position:absolute;inset:0;pointer-events:none;overflow:visible;z-ind
   <!-- register -->
   <section class="view" id="view-register" role="tabpanel" aria-labelledby="tab-register">
     <div class="panel">
-      <h2>Asset register</h2>
+      <h2 class="vh"><svg class="ic" aria-hidden="true"><use href="#i-register"/></svg>Asset register</h2>
       <p class="lede">Every asset group, hazard and period in the assessment, with the number of assets and the installed capacity in each risk class. Capacity applies to generation assets only.</p>
       <div class="tblbar">
         <input type="search" id="q" placeholder="Search" aria-label="Search the register">
