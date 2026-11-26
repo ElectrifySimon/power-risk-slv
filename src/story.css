@@ -258,3 +258,9 @@ svg.ul-line{position:absolute;inset:0;pointer-events:none;overflow:visible;z-ind
 svg.ul-band{position:absolute;inset:0;pointer-events:none;overflow:visible;z-index:0}
 .s-step h3,.s-cta h2{position:relative}
 .s-step h3>span,.s-cta h2>span{position:relative;z-index:1}
+
+.ul-target{background-image:linear-gradient(#FFD6AA,#FFD6AA);background-repeat:no-repeat;
+  background-position:0 100%;background-size:0 2px;padding-bottom:1px;
+  transition:background-size 760ms cubic-bezier(.22,.9,.24,1);
+  -webkit-box-decoration-break:clone;box-decoration-break:clone}
+.ul-target.drawn{background-size:100% 2px}

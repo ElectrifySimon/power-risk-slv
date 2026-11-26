@@ -135,35 +135,7 @@ function wrapPhrase(block, phrase) {
 }
 
 function drawUnderline(block, span) {
-  const box = block.getBoundingClientRect();
-  let svg = block.querySelector("svg.ul-line");
-  if (!svg) {
-    svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-    svg.setAttribute("class", "ul-line");
-    svg.setAttribute("aria-hidden", "true");
-    block.appendChild(svg);
-  }
-  svg.style.width = "100%";
-  svg.style.height = "100%";
-  svg.innerHTML = "";
-  [...span.getClientRects()].forEach((r, i) => {
-    const x1 = r.left - box.left + 1;
-    const x2 = r.right - box.left - 1;
-    const y = r.bottom - box.top - 3;
-    const drift = (i % 2 === 0 ? 1 : -1) * 1.2;
-    const p = document.createElementNS("http://www.w3.org/2000/svg", "path");
-    p.setAttribute("d", `M${x1},${y} C${x1 + (x2 - x1) * 0.33},${y + drift} ${x1 + (x2 - x1) * 0.66},${y - drift} ${x2},${y}`);
-    p.setAttribute("fill", "none");
-    p.setAttribute("stroke", "#FFD6AA");
-    p.setAttribute("stroke-width", "1.7");
-    p.setAttribute("stroke-linecap", "round");
-    const len = x2 - x1;
-    p.style.strokeDasharray = `${len}`;
-    p.style.strokeDashoffset = `${len}`;
-    p.style.transition = `stroke-dashoffset 760ms cubic-bezier(.22,.9,.24,1) ${i * 90}ms`;
-    svg.appendChild(p);
-    requestAnimationFrame(() => requestAnimationFrame(() => { p.style.strokeDashoffset = "0"; }));
-  });
+  span.classList.add("drawn");
 }
 
 const UL = [];
@@ -183,15 +155,10 @@ function drawVisible() {
   UL.forEach((t) => {
     if (t.done) return;
     const r = t.block.getBoundingClientRect();
-    if (r.top < h * 0.85 && r.bottom > 40) { t.done = true; drawUnderline(t.block, t.span); }
+    if (r.top < h * 0.9 && r.bottom > 0) { t.done = true; drawUnderline(t.block, t.span); }
   });
 }
 
 drawVisible();
-if (window.ResizeObserver) {
-  const ro = new ResizeObserver(() => UL.forEach((t) => { if (t.done) drawUnderline(t.block, t.span); }));
-  UL.forEach((t) => ro.observe(t.block));
-}
-if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => setTimeout(() => UL.forEach((t) => { if (t.done) drawUnderline(t.block, t.span); }), 100));
 window.addEventListener("scroll", () => requestAnimationFrame(drawVisible), { passive: true });
-window.addEventListener("resize", () => UL.forEach((t) => { if (t.done) drawUnderline(t.block, t.span); }));
+
