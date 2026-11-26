@@ -330,5 +330,8 @@ footer .disclaimer{color:#5F6E7D;font-size:11.5px;line-height:1.55;max-width:98c
 .chip[aria-pressed=true] .ic{color:var(--brand)}
 .chip[aria-pressed=true] .ic{opacity:1}
 
-.chips{align-items:center}
+
 .chip{min-height:32px;line-height:1}
+
+.fieldrow .chips{align-items:center}
+.fieldrow .chips .chip{align-self:center;display:inline-flex;align-items:center;justify-content:center;padding-top:0;padding-bottom:0}
