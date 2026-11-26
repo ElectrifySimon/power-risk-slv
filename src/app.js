@@ -5,7 +5,7 @@
       PER = DATA.PER, CATS = DATA.CATS, MEAS = DATA.MEAS, DEF = DATA.DEF, GEO = DATA.GEO;
 
   var CLS = ["low", "mod", "high", "crit"];
-  var COL = { low: "#E1E9F1", mod: "#A9C0D5", high: "#0073AB", crit: "#B03218" };
+  var COL = { low: "#E4EBF2", mod: "#93AFC8", high: "#0073AB", crit: "#B03218" };
   var HAZCOL = { flood: "#0073AB", drought: "#8A6A3A", heat: "#B03218" };
   var ICON = { hydro: "i-hydropower", solar: "i-solar", geo: "i-geothermal", wind: "i-wind", biomass: "i-bioenergy", biogas: "i-bioenergy" };
 
@@ -168,7 +168,8 @@
         var hid = tab[h][pers[pers.length - 1]][a.id] || [0, 0, 0, 0];
         var hshare = fp(pct(hc(hid), sum(hid)));
         row.innerHTML = '<div class="rl">' + icon + '<span class="nm">' + a.name +
-          "<small>" + (S.met === "n" ? fmtN(t0) : fmtMW(t0)) + " " + unit + (a.note ? " &middot; " + a.note : "") + "</small></span></div>";
+          "<small>" + (S.met === "n" ? fmtN(t0) : fmtMW(t0)) + " " + unit + (a.note ? " &middot; " + a.note : "") +
+          (t0 <= 2 ? " &middot; indicative" : "") + "</small></span></div>";
         var bars = document.createElement("div"); bars.className = "bars";
         pers.forEach(function (p) {
           var arr = tab[h][p][a.id] || [0, 0, 0, 0], t = sum(arr);

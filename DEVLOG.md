@@ -21,3 +21,11 @@ Notes:
 
 - The capacity view applies to generation only, as in the source.
 - Hotspot labels WEST / CENTRE / EAST are retained from the assessment narrative; they are not administrative units.
+
+## 26 November 2026 - story front door, round three
+
+- The page now opens on a parallax story in the dark navy, four beats driven by the assessment numbers, and closes on a button into the dashboard. One page, one passphrase, two acts: `#story` and `#dashboard`.
+- Story numbers are derived from the same tables as the dashboard, not typed: 56%, 81%, 100% and 1 813.
+- Round three fixes: hero columns aligned to one grid, KPI numbers reduced below the H1 and rebuilt as delta chips, map neighbour labels moved outside the borders, a less-change/more-change key under the map, chart rows sorted by share with a high-plus-critical column, register filters for group and risk class, sort indicators, `n/a` for capacity that is not reported, and a scroll fade on the table.
+- Small samples now say `indicative` in the row label, so a planned asset cannot read as a 100% finding.
+- Visual review ran on a second model (Claude Haiku via the vision gateway, since the default model returns empty answers for images). Scores moved 7 to 8 out of 10 on the story hero.
