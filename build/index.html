@@ -1278,7 +1278,9 @@ function chipIcon(name) {
       var b = document.createElement("button");
       b.className = "chip"; b.type = "button";
       b.setAttribute("aria-pressed", MS.h === o[0]);
-      b.innerHTML = (o[0] !== "all" ? '<span class="dot" style="background:' + HAZCOL[o[0]] + ';margin-right:7px"></span>' : "") + o[1];
+      b.innerHTML = (o[0] !== "all"
+        ? '<svg class="ic" aria-hidden="true" style="color:' + HAZCOL[o[0]] + '"><use href="#i-' + o[0] + '"/></svg>'
+        : "") + '<span>' + o[1] + '</span>';
       b.onclick = function () { MS.h = o[0]; renderMeasures(); };
       ch.appendChild(b);
     });
