@@ -315,7 +315,8 @@ footer .disclaimer{color:#5F6E7D;font-size:11.5px;line-height:1.55;max-width:98c
 .kpi .l .ic{width:15px;height:15px;color:var(--brand);stroke-width:1.8}
 .kpi .v{margin:9px 0 8px}
 .kpi .kbar{display:block;height:4px;border-radius:2px;background:var(--surface2);overflow:hidden;margin:0 0 9px}
-.kpi .kbar i{display:block;height:100%;border-radius:2px;background:linear-gradient(90deg,#2C7CAE,#0073AB)}
+.kpi .kbar i{display:block;height:100%;border-radius:2px;background:linear-gradient(90deg,#2C7CAE,#0073AB);
+  transition:width .95s cubic-bezier(.22,.7,.24,1)}
 .kpi .c{color:#4A5A68}
 @media (max-width:560px){
   .mast .edition,.mast .sep{display:none}
@@ -387,12 +388,14 @@ footer .disclaimer{color:#5F6E7D;font-size:11.5px;line-height:1.55;max-width:98c
 .vlegend{display:flex;flex-wrap:wrap;gap:16px;margin:14px 0 0;font:500 11px Inter,sans-serif;color:rgba(233,241,248,.72);align-self:flex-start}
 .vlegend span{display:inline-flex;align-items:center;gap:7px}
 .vlegend i{width:10px;height:10px;border-radius:3px;display:inline-block}
+.vlegend span:first-child i{box-shadow:inset 0 0 0 1px rgba(255,255,255,.25)}
 
 /* hydro */
 .plants{width:min(100%,320px);height:170px}
 
 /* solar */
-.solarbars{width:100%;max-width:460px;height:170px}
+.solarbars{width:100%;max-width:470px;height:180px}
+.vis-lead{font:600 15px/1.4 Inter,sans-serif;color:#fff;margin:0 0 16px;max-width:38ch;align-self:flex-start}
 .towers{width:100%;max-width:520px;height:170px}
 
 /* steps */
@@ -521,6 +524,7 @@ footer .disclaimer{color:#5F6E7D;font-size:11.5px;line-height:1.55;max-width:98c
       </div>
       <div class="vis" data-vis="solar">
         <p class="vis-title"><svg class="ic" aria-hidden="true"><use href="#i-solar"/></svg>1&nbsp;941 solar PV installations</p>
+        <p class="vis-lead" id="solar-lead"></p>
         <div class="solarbars" id="solarbars"></div>
         <div class="vlegend"><span><i style="background:#C8D4DF"></i>Low</span><span><i style="background:#8FB4CE"></i>Moderate</span><span><i style="background:#0073AB"></i>High</span><span><i style="background:#B03218"></i>Critical</span></div>
         <p class="vis-note">Share of installations by heatwave risk, near term and by mid-century.</p>
@@ -918,6 +922,32 @@ document.getElementById("sprite").innerHTML = "<symbol id=\"i-biomass\" viewBox=
     return pct(v, t);
   }
 
+  var KPI_TARGETS = [];
+  window.__animateKPIs = function () {
+    KPI_TARGETS.forEach(function (pair) {
+      var el = pair[0].querySelector(".v"), bar = pair[0].querySelector(".kbar i"), to = pair[1];
+      el.textContent = "0%";
+      if (bar) { bar.style.transition = "none"; bar.style.width = "0"; }
+      requestAnimationFrame(function () {
+        if (bar) { bar.style.transition = ""; bar.style.width = Math.max(2, Math.min(100, to)) + "%"; }
+        countUp(el, to, 0);
+      });
+    });
+  };
+
+  function countUp(el, to, from) {
+    var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduce) { el.textContent = Math.round(to) + "%"; return; }
+    var start = performance.now(), dur = 950, f0 = from || 0;
+    function tick(now) {
+      var p = Math.min(1, (now - start) / dur);
+      var e = 1 - Math.pow(1 - p, 3);
+      el.textContent = Math.round(f0 + (to - f0) * e) + "%";
+      if (p < 1) requestAnimationFrame(tick); else el.textContent = Math.round(to) + "%";
+    }
+    requestAnimationFrame(tick);
+  }
+
   function renderKPIs() {
     var h = S.haz, gen = ASSETS.filter(function (a) { return a.g === "gen"; }).map(function (a) { return a.id; });
     var defs = [
@@ -926,7 +956,7 @@ document.getElementById("sprite").innerHTML = "<symbol id=\"i-biomass\" viewBox=
       ["Substations", ["tsub", "dsub"], N, "substation"],
       ["Transmission towers", ["tower"], N, "tower"]
     ];
-    var box = $("#kpis"); box.innerHTML = "";
+    var box = $("#kpis"); box.innerHTML = ""; KPI_TARGETS.length = 0;
     defs.forEach(function (d) {
       var a = share(h, "s", d[1], d[2]), b = share(h, "m", d[1], d[2]);
       var v, c;
@@ -938,10 +968,16 @@ document.getElementById("sprite").innerHTML = "<symbol id=\"i-biomass\" viewBox=
       }
       var el = document.createElement("div");
       el.className = "kpi";
+      var target = parseFloat(v) || 0;
       el.innerHTML = '<p class="l"><svg class="ic" aria-hidden="true"><use href="#i-' + d[3] + '"/></svg>' + d[0] + "</p>" +
-        '<p class="v">' + v + '</p><span class="kbar"><i style="width:' + Math.max(2, Math.min(100, parseFloat(v))) + '%"></i></span>' +
+        '<p class="v">0%</p><span class="kbar"><i style="width:0"></i></span>' +
         '<p class="c">' + c + "</p>";
       box.appendChild(el);
+      countUp(el.querySelector(".v"), target, (el._shown || 0));
+      el._shown = target;
+      var bar = el.querySelector(".kbar i");
+      setTimeout(function () { bar.style.width = Math.max(2, Math.min(100, target)) + "%"; }, 40);
+      KPI_TARGETS.push([el, target]);
     });
     var total = 0;
     ASSETS.forEach(function (a) { total += sum(N.flood.s[a.id] || [0, 0, 0, 0]); });
@@ -1486,28 +1522,50 @@ document.getElementById("sprite").innerHTML = "<symbol id=\"i-biomass\" viewBox=
     }, true);
   }
 
+  function fmtN2(n) { return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, "\u2009"); }
+
   function buildSolar() {
     var near = totals("heat", "s", ["solar"]), mid = totals("heat", "m", ["solar"]);
-    var pct = function (a) {
-      var t = a.reduce(function (x, y) { return x + y; }, 0) || 1;
-      return a.map(function (v) { return Math.round((v / t) * 10000) / 100; });
-    };
-    var A = pct(mid), B = pct(near);
+    var t = function (a) { return a.reduce(function (x, y) { return x + y; }, 0); };
+    var tn = t(near), tm = t(mid);
+    var riskN = near[1] + near[2] + near[3], riskM = mid[1] + mid[2] + mid[3];
+    var lead = document.getElementById("solar-lead");
+    if (lead) lead.innerHTML = fmtN2(riskN) + " installations at moderate heat risk today, " +
+      fmtN2(riskM) + " by mid-century";
+
     var c = chart("solarbars"); if (!c) return;
     var names = ["Low", "Moderate", "High", "Critical"];
+    var pct = function (a) { var s2 = t(a) || 1; return a.map(function (v) { return Math.round((v / s2) * 1000) / 10; }); };
+    var A = pct(mid), B = pct(near);
+    var cnt = function (a) { return [a[0], a[1], a[2], a[3]]; };
+    var AN = cnt(mid), BN = cnt(near);
     c.setOption({
       animation: ANIM, animationDuration: 800, animationDurationUpdate: 900,
       animationEasing: "cubicOut", animationEasingUpdate: "cubicInOut",
-      grid: { left: 4, right: 8, top: 8, bottom: 22, containLabel: true },
+      grid: { left: 4, right: 10, top: 8, bottom: 26, containLabel: true },
       tooltip: { trigger: "axis", axisPointer: { type: "shadow" }, backgroundColor: "rgba(7,22,39,.94)",
-        borderColor: "rgba(142,197,255,.3)", textStyle: { color: "#E9F1F8", fontSize: 12 } },
+        borderColor: "rgba(142,197,255,.3)", textStyle: { color: "#E9F1F8", fontSize: 12 },
+        formatter: function (ps) {
+          var i = ps[0].dataIndex, arr = i === 0 ? AN : BN, tot2 = i === 0 ? tm : tn;
+          return (i === 0 ? "2041\u20132070" : "2015\u20132044") + "<br/>" + ps.map(function (p2, k) {
+            var v2 = arr[k] || 0;
+            return p2.marker + p2.seriesName + ": " + fmtN2(v2) + " (" + Math.round((v2 / tot2) * 100) + "%)";
+          }).join("<br/>");
+        } },
       xAxis: { type: "value", max: 100, axisLabel: { color: "rgba(233,241,248,.6)", fontSize: 10, formatter: "{value}%" },
         splitLine: { lineStyle: { color: "rgba(255,255,255,.07)" } }, axisLine: { show: false } },
       yAxis: { type: "category", data: ["2041\u20132070", "2015\u20132044"],
-        axisLabel: { color: "rgba(233,241,248,.75)", fontSize: 11 }, axisTick: { show: false }, axisLine: { show: false } },
+        axisLabel: { color: "rgba(233,241,248,.8)", fontSize: 11.5 }, axisTick: { show: false }, axisLine: { show: false } },
       series: names.map(function (n, i) {
-        return { name: n, type: "bar", stack: "risk", barWidth: 22, data: [A[i], B[i]],
-          itemStyle: { color: CLASSCOL[i], borderRadius: i === 3 ? [0, 3, 3, 0] : 0 } };
+        return {
+          name: n, type: "bar", stack: "risk", barWidth: 30, data: [A[i], B[i]],
+          itemStyle: { color: CLASSCOL[i], borderRadius: i === 3 ? [0, 4, 4, 0] : 0 },
+          label: { show: true, position: "inside", color: i === 0 ? "#0E2233" : "#fff", fontSize: 11, fontWeight: 600,
+            formatter: function (p2) {
+              var v2 = p2.dataIndex === 0 ? AN[i] : BN[i];
+              return p2.value >= 8 && v2 ? fmtN2(v2) : "";
+            } }
+        };
       })
     });
   }
@@ -1620,7 +1678,10 @@ document.getElementById("sprite").innerHTML = "<symbol id=\"i-biomass\" viewBox=
     app.classList.toggle("on", dash);
     story.style.display = dash ? "none" : "";
     document.body.style.background = dash ? "" : "#071627";
-    if (dash) window.scrollTo(0, 0);
+    if (dash) {
+      window.scrollTo(0, 0);
+      if (window.__animateKPIs) window.__animateKPIs();
+    }
   }
   ["#open-dash", "#jump-dash"].forEach(function (sel) {
     var b = $(sel);

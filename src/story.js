@@ -158,28 +158,50 @@
     }, true);
   }
 
+  function fmtN2(n) { return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, "\u2009"); }
+
   function buildSolar() {
     var near = totals("heat", "s", ["solar"]), mid = totals("heat", "m", ["solar"]);
-    var pct = function (a) {
-      var t = a.reduce(function (x, y) { return x + y; }, 0) || 1;
-      return a.map(function (v) { return Math.round((v / t) * 10000) / 100; });
-    };
-    var A = pct(mid), B = pct(near);
+    var t = function (a) { return a.reduce(function (x, y) { return x + y; }, 0); };
+    var tn = t(near), tm = t(mid);
+    var riskN = near[1] + near[2] + near[3], riskM = mid[1] + mid[2] + mid[3];
+    var lead = document.getElementById("solar-lead");
+    if (lead) lead.innerHTML = fmtN2(riskN) + " installations at moderate heat risk today, " +
+      fmtN2(riskM) + " by mid-century";
+
     var c = chart("solarbars"); if (!c) return;
     var names = ["Low", "Moderate", "High", "Critical"];
+    var pct = function (a) { var s2 = t(a) || 1; return a.map(function (v) { return Math.round((v / s2) * 1000) / 10; }); };
+    var A = pct(mid), B = pct(near);
+    var cnt = function (a) { return [a[0], a[1], a[2], a[3]]; };
+    var AN = cnt(mid), BN = cnt(near);
     c.setOption({
       animation: ANIM, animationDuration: 800, animationDurationUpdate: 900,
       animationEasing: "cubicOut", animationEasingUpdate: "cubicInOut",
-      grid: { left: 4, right: 8, top: 8, bottom: 22, containLabel: true },
+      grid: { left: 4, right: 10, top: 8, bottom: 26, containLabel: true },
       tooltip: { trigger: "axis", axisPointer: { type: "shadow" }, backgroundColor: "rgba(7,22,39,.94)",
-        borderColor: "rgba(142,197,255,.3)", textStyle: { color: "#E9F1F8", fontSize: 12 } },
+        borderColor: "rgba(142,197,255,.3)", textStyle: { color: "#E9F1F8", fontSize: 12 },
+        formatter: function (ps) {
+          var i = ps[0].dataIndex, arr = i === 0 ? AN : BN, tot2 = i === 0 ? tm : tn;
+          return (i === 0 ? "2041\u20132070" : "2015\u20132044") + "<br/>" + ps.map(function (p2, k) {
+            var v2 = arr[k] || 0;
+            return p2.marker + p2.seriesName + ": " + fmtN2(v2) + " (" + Math.round((v2 / tot2) * 100) + "%)";
+          }).join("<br/>");
+        } },
       xAxis: { type: "value", max: 100, axisLabel: { color: "rgba(233,241,248,.6)", fontSize: 10, formatter: "{value}%" },
         splitLine: { lineStyle: { color: "rgba(255,255,255,.07)" } }, axisLine: { show: false } },
       yAxis: { type: "category", data: ["2041\u20132070", "2015\u20132044"],
-        axisLabel: { color: "rgba(233,241,248,.75)", fontSize: 11 }, axisTick: { show: false }, axisLine: { show: false } },
+        axisLabel: { color: "rgba(233,241,248,.8)", fontSize: 11.5 }, axisTick: { show: false }, axisLine: { show: false } },
       series: names.map(function (n, i) {
-        return { name: n, type: "bar", stack: "risk", barWidth: 22, data: [A[i], B[i]],
-          itemStyle: { color: CLASSCOL[i], borderRadius: i === 3 ? [0, 3, 3, 0] : 0 } };
+        return {
+          name: n, type: "bar", stack: "risk", barWidth: 30, data: [A[i], B[i]],
+          itemStyle: { color: CLASSCOL[i], borderRadius: i === 3 ? [0, 4, 4, 0] : 0 },
+          label: { show: true, position: "inside", color: i === 0 ? "#0E2233" : "#fff", fontSize: 11, fontWeight: 600,
+            formatter: function (p2) {
+              var v2 = p2.dataIndex === 0 ? AN[i] : BN[i];
+              return p2.value >= 8 && v2 ? fmtN2(v2) : "";
+            } }
+        };
       })
     });
   }
@@ -292,7 +314,10 @@
     app.classList.toggle("on", dash);
     story.style.display = dash ? "none" : "";
     document.body.style.background = dash ? "" : "#071627";
-    if (dash) window.scrollTo(0, 0);
+    if (dash) {
+      window.scrollTo(0, 0);
+      if (window.__animateKPIs) window.__animateKPIs();
+    }
   }
   ["#open-dash", "#jump-dash"].forEach(function (sel) {
     var b = $(sel);

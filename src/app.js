@@ -92,6 +92,32 @@
     return pct(v, t);
   }
 
+  var KPI_TARGETS = [];
+  window.__animateKPIs = function () {
+    KPI_TARGETS.forEach(function (pair) {
+      var el = pair[0].querySelector(".v"), bar = pair[0].querySelector(".kbar i"), to = pair[1];
+      el.textContent = "0%";
+      if (bar) { bar.style.transition = "none"; bar.style.width = "0"; }
+      requestAnimationFrame(function () {
+        if (bar) { bar.style.transition = ""; bar.style.width = Math.max(2, Math.min(100, to)) + "%"; }
+        countUp(el, to, 0);
+      });
+    });
+  };
+
+  function countUp(el, to, from) {
+    var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduce) { el.textContent = Math.round(to) + "%"; return; }
+    var start = performance.now(), dur = 950, f0 = from || 0;
+    function tick(now) {
+      var p = Math.min(1, (now - start) / dur);
+      var e = 1 - Math.pow(1 - p, 3);
+      el.textContent = Math.round(f0 + (to - f0) * e) + "%";
+      if (p < 1) requestAnimationFrame(tick); else el.textContent = Math.round(to) + "%";
+    }
+    requestAnimationFrame(tick);
+  }
+
   function renderKPIs() {
     var h = S.haz, gen = ASSETS.filter(function (a) { return a.g === "gen"; }).map(function (a) { return a.id; });
     var defs = [
@@ -100,7 +126,7 @@
       ["Substations", ["tsub", "dsub"], N, "substation"],
       ["Transmission towers", ["tower"], N, "tower"]
     ];
-    var box = $("#kpis"); box.innerHTML = "";
+    var box = $("#kpis"); box.innerHTML = ""; KPI_TARGETS.length = 0;
     defs.forEach(function (d) {
       var a = share(h, "s", d[1], d[2]), b = share(h, "m", d[1], d[2]);
       var v, c;
@@ -112,10 +138,16 @@
       }
       var el = document.createElement("div");
       el.className = "kpi";
+      var target = parseFloat(v) || 0;
       el.innerHTML = '<p class="l"><svg class="ic" aria-hidden="true"><use href="#i-' + d[3] + '"/></svg>' + d[0] + "</p>" +
-        '<p class="v">' + v + '</p><span class="kbar"><i style="width:' + Math.max(2, Math.min(100, parseFloat(v))) + '%"></i></span>' +
+        '<p class="v">0%</p><span class="kbar"><i style="width:0"></i></span>' +
         '<p class="c">' + c + "</p>";
       box.appendChild(el);
+      countUp(el.querySelector(".v"), target, (el._shown || 0));
+      el._shown = target;
+      var bar = el.querySelector(".kbar i");
+      setTimeout(function () { bar.style.width = Math.max(2, Math.min(100, target)) + "%"; }, 40);
+      KPI_TARGETS.push([el, target]);
     });
     var total = 0;
     ASSETS.forEach(function (a) { total += sum(N.flood.s[a.id] || [0, 0, 0, 0]); });
