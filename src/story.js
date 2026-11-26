@@ -106,9 +106,10 @@
     return CHARTS[id];
   }
 
-  var lastWf = "s";
+  var lastWf = "s", CUR = {};
   function buildWaffle(key) {
-    lastWf = key;
+    if (CUR.waffle === key) return;
+    CUR.waffle = key; lastWf = key;
     var d = WF[key] || WF.s;
     $("#wf-title").textContent = d.title;
     $("#wf-note").textContent = d.note;
@@ -118,30 +119,34 @@
     for (var j = 0; j < total; j++) {
       var acc = 0, ci = 0;
       for (var k = 0; k < 4; k++) { acc += d.arr[k]; if (j < acc) { ci = k; break; } }
-      data.push({ value: [j % cols, Math.floor(j / cols)], itemStyle: { color: CLASSCOL[ci] } });
+      data.push({ name: "c" + j, value: [j % cols, Math.floor(j / cols)], itemStyle: { color: CLASSCOL[ci] } });
     }
     var el = document.getElementById("waffle");
     var w = (el && el.clientWidth) || 420;
     var cell = Math.max(8, Math.floor((w - (cols - 1) * 5) / cols));
     c.setOption({
-      animation: ANIM, animationDuration: 650, animationDurationUpdate: 900,
-      animationEasing: "cubicOut", animationEasingUpdate: "cubicInOut",
+      animation: ANIM, animationDuration: 700, animationDurationUpdate: 1100,
+      animationEasing: "cubicOut", animationEasingUpdate: "quinticInOut",
       animationDelay: function (idx) { return idx * 4; },
-      animationDelayUpdate: function (idx) { return idx * 3; },
+      animationDelayUpdate: function (idx) { return idx * 2.2; },
       grid: { left: 0, right: 0, top: 0, bottom: 0 },
       xAxis: { type: "value", min: -0.5, max: cols - 0.5, show: false },
       yAxis: { type: "value", min: -0.5, max: rows - 0.5, inverse: true, show: false },
-      series: [{ type: "scatter", symbol: "rect", symbolSize: cell - 4, silent: true, data: data }]
+      series: [{ id: "cells", type: "scatter", symbol: "rect", symbolSize: cell - 4, silent: true, data: data,
+        universalTransition: { enabled: true, divideShape: "clone" } }]
     });
   }
 
   function buildPlants() {
+    if (CUR.plants) return;
+    CUR.plants = 1;
     var arr = totals("drought", "m", ["hydro"]);
     var hot = arr[2] + arr[3], total = arr.reduce(function (a, b) { return a + b; }, 0);
     var c = chart("plants"); if (!c) return;
     var cols = 7, data = [];
     for (var i = 0; i < total; i++) {
       data.push({
+        name: "p" + i,
         value: [i % cols, Math.floor(i / cols)],
         itemStyle: { color: i < hot ? CLASSCOL[3] : "rgba(233,241,248,.16)" }
       });
@@ -150,17 +155,21 @@
     var w = (el && el.clientWidth) || 300;
     var cell = Math.max(10, Math.floor((w - (cols - 1) * 8) / cols));
     c.setOption({
-      animation: ANIM, animationDuration: 600, animationDelay: function (idx) { return idx * 22; },
+      animation: ANIM, animationDuration: 700, animationDurationUpdate: 1000, animationEasingUpdate: "quinticInOut",
+      animationDelay: function (idx) { return idx * 22; },
       grid: { left: 0, right: 0, top: 0, bottom: 0 },
       xAxis: { type: "value", min: -0.5, max: cols - 0.5, show: false },
       yAxis: { type: "value", min: -0.5, max: 2.5, inverse: true, show: false },
-      series: [{ type: "scatter", symbol: "rect", symbolSize: cell - 4, silent: true, data: data }]
+      series: [{ id: "cells", type: "scatter", symbol: "rect", symbolSize: cell - 4, silent: true, data: data,
+        universalTransition: { enabled: true, divideShape: "clone" } }]
     }, true);
   }
 
   function fmtN2(n) { return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, "\u2009"); }
 
   function buildSolar() {
+    if (CUR.solar) return;
+    CUR.solar = 1;
     var near = totals("heat", "s", ["solar"]), mid = totals("heat", "m", ["solar"]);
     var t = function (a) { return a.reduce(function (x, y) { return x + y; }, 0); };
     var tn = t(near), tm = t(mid);
@@ -176,8 +185,8 @@
     var cnt = function (a) { return [a[0], a[1], a[2], a[3]]; };
     var AN = cnt(mid), BN = cnt(near);
     c.setOption({
-      animation: ANIM, animationDuration: 800, animationDurationUpdate: 900,
-      animationEasing: "cubicOut", animationEasingUpdate: "cubicInOut",
+      animation: ANIM, animationDuration: 800, animationDurationUpdate: 1000,
+      animationEasing: "cubicOut", animationEasingUpdate: "quinticInOut",
       grid: { left: 4, right: 10, top: 8, bottom: 26, containLabel: true },
       tooltip: { trigger: "axis", axisPointer: { type: "shadow" }, backgroundColor: "rgba(7,22,39,.94)",
         borderColor: "rgba(142,197,255,.3)", textStyle: { color: "#E9F1F8", fontSize: 12 },
@@ -194,7 +203,9 @@
         axisLabel: { color: "rgba(233,241,248,.8)", fontSize: 11.5 }, axisTick: { show: false }, axisLine: { show: false } },
       series: names.map(function (n, i) {
         return {
-          name: n, type: "bar", stack: "risk", barWidth: 30, data: [A[i], B[i]],
+          id: "s" + i, name: n, type: "bar", stack: "risk", barWidth: 30,
+          data: [{ name: "mid", value: A[i] }, { name: "near", value: B[i] }],
+          universalTransition: { enabled: true, divideShape: "clone" },
           itemStyle: { color: CLASSCOL[i], borderRadius: i === 3 ? [0, 4, 4, 0] : 0 },
           label: { show: true, position: "inside", color: "#fff", fontSize: 11, fontWeight: 700,
             formatter: function (p2) {
@@ -206,14 +217,16 @@
   }
 
   function buildTowers() {
+    if (CUR.towers) return;
+    CUR.towers = 1;
     var near = totals("flood", "s", ["tower"]), mid = totals("flood", "m", ["tower"]);
     var tot = function (a) { return a.reduce(function (x, y) { return x + y; }, 0); };
     var hn = near[2] + near[3], hm = mid[2] + mid[3], tn = tot(near), tm = tot(mid);
     var c = chart("towers"); if (!c) return;
     var lbl = function (n, t) { return Math.round((n / t) * 100) + "%  \u00b7  " + n + " of " + t; };
     c.setOption({
-      animation: ANIM, animationDuration: 750, animationDurationUpdate: 900,
-      animationEasing: "cubicOut", animationEasingUpdate: "cubicInOut",
+      animation: ANIM, animationDuration: 800, animationDurationUpdate: 1000,
+      animationEasing: "cubicOut", animationEasingUpdate: "quinticInOut",
       grid: { left: 4, right: 118, top: 10, bottom: 26, containLabel: true },
       tooltip: { trigger: "axis", axisPointer: { type: "shadow" }, backgroundColor: "rgba(7,22,39,.94)",
         borderColor: "rgba(142,197,255,.3)", textStyle: { color: "#E9F1F8", fontSize: 12 } },
@@ -224,7 +237,8 @@
       series: [
         { name: "track", type: "bar", barWidth: 26, silent: true, data: [100, 100], barGap: "-100%",
           itemStyle: { color: "rgba(255,255,255,.07)", borderRadius: 4 }, z: 1, animation: false },
-        { name: "High or critical", type: "bar", barWidth: 26, data: [
+        { id: "hit", name: "High or critical", type: "bar", barWidth: 26,
+          universalTransition: { enabled: true, divideShape: "clone" }, data: [
             { value: Math.round((hm / tm) * 100), label: { formatter: lbl(hm, tm) } },
             { value: Math.round((hn / tn) * 100), label: { formatter: lbl(hn, tn) } }
           ],
@@ -246,8 +260,6 @@
     clearTimeout(rt);
     rt = setTimeout(function () {
       Object.keys(CHARTS).forEach(function (k) { CHARTS[k].resize(); });
-      buildWaffle(lastWf);
-      buildTowers();
     }, 160);
   });
 
@@ -286,6 +298,7 @@
     }, { rootMargin: "-45% 0px -45% 0px", threshold: 0 });
     steps.forEach(function (s) { io.observe(s); });
   }
+  buildPlants(); buildSolar(); buildTowers(); buildWaffle("s");
   activate(steps[0]);
 
   /* ---------- routing ---------- */
