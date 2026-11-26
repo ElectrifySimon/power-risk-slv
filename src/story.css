@@ -80,8 +80,7 @@
 
 /* steps */
 .steps{padding:14vh 0 18vh}
-.s-step{min-height:76svh;display:flex;flex-direction:column;justify-content:center;max-width:44ch;
-  )
+.s-step{min-height:76svh;display:flex;flex-direction:column;justify-content:center;max-width:44ch}
 .s-step.on{opacity:1;transform:none}
 .ic{width:17px;height:17px;flex:0 0 auto;stroke-width:1.9}
 .s-step .k{display:inline-flex;align-items:center;gap:9px;font:600 11px Inter,sans-serif;letter-spacing:.18em;text-transform:uppercase;color:#8EC5FF;margin:0 0 16px}

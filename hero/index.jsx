@@ -45,7 +45,7 @@ if (title) {
       showCursor
       hideCursorWhileTyping={false}
       cursorCharacter="|"
-      cursorColor="#8EC5FF"
+      cursorColor="#FFD6AA"
       typeEffect="none"
       startOnVisible={false}
     />
