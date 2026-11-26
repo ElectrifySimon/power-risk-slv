@@ -86,7 +86,9 @@ def icon_sprite():
     re_path = os.path.join(ROOT, "vendor", "irena", "re-icons.svg")
     if os.path.exists(re_path):
         re_raw = open(re_path, encoding="utf-8").read()
-        out.extend(re.findall(r"<symbol.*?</symbol>", re_raw, flags=re.S))
+        re_syms = re.findall(r"<symbol.*?</symbol>", re_raw, flags=re.S)
+        re_syms = [x.replace('stroke-width="3"', 'stroke-width="5.4"') for x in re_syms]
+        out.extend(re_syms)
     for f in sorted(os.listdir(base)):
         if not f.endswith(".svg"):
             continue
