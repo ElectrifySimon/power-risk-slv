@@ -136,6 +136,7 @@ def main():
 {body}
 </div>
 <script src="vendor/echarts.min.js"></script>
+<script src="vendor/hero-react.js"></script>
 <script>
 var DATA = {json.dumps(data, ensure_ascii=False, separators=(",", ":"))};
 document.getElementById("sprite").innerHTML = {json.dumps(sprite)};
@@ -150,6 +151,8 @@ document.getElementById("sprite").innerHTML = {json.dumps(sprite)};
     import shutil as _sh
     _sh.copy(os.path.join(ROOT, "vendor", "echarts.min.js"),
              os.path.join(ROOT, "build", "vendor", "echarts.min.js"))
+    _sh.copy(os.path.join(ROOT, "vendor", "hero-react.js"),
+             os.path.join(ROOT, "build", "vendor", "hero-react.js"))
     out = os.path.join(ROOT, "build", "index.html")
     open(out, "w", encoding="utf-8").write(html)
     print(f"built {out} {len(html):,} chars, {len(data['GEO']['depts'])} departments, "

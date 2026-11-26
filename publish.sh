@@ -10,6 +10,7 @@ mkdir -p gated
 cp build/index.html gated/index.html
 mkdir -p gated/vendor
 cp vendor/echarts.min.js gated/vendor/echarts.min.js
+cp vendor/hero-react.js gated/vendor/hero-react.js
 
 PASS="$(cat .passphrase)"
 
