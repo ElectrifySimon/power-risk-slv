@@ -457,16 +457,28 @@ function chipIcon(name) {
     window.__EXPORT_ROWS = rows;
   }
   function csv() {
-    var rows = window.__EXPORT_ROWS || ROWS;
-    var head = ["Group", "Asset", "Hazard", "Period", "Risk class", "Assets", "Capacity (MW)"];
-    var lines = [head.join(",")].concat(rows.map(function (r) {
-      return [r.group, r.asset, r.haz, r.per, r.cls, r.n, r.mw == null ? "" : r.mw]
-        .map(function (v) { return '"' + String(v).replace(/"/g, '""') + '"'; }).join(",");
-    }));
-    var blob = new Blob(["\uFEFF" + lines.join("\r\n")], { type: "text/csv;charset=utf-8" });
+    /* One JSON is the product's data layer: the register rows the reader is
+       looking at, plus the counts, measures and derived figures behind them. */
+    var rows = (window.__EXPORT_ROWS || ROWS).map(function (r) {
+      return { group: r.group, asset: r.asset, hazard: r.haz, period: r.per,
+               risk_class: r.cls, assets: r.n, capacity_mw: r.mw };
+    });
+    var payload = {
+      meta: DATA.meta,
+      periods: DATA.PER,
+      categories: DATA.CATS,
+      hazards: DATA.HAZ,
+      assets: DATA.ASSETS,
+      definitions: DATA.DEF,
+      counts: { N: DATA.N, MW: DATA.MW },
+      measures: DATA.MEAS,
+      derived: DATA.derived,
+      register: rows
+    };
+    var blob = new Blob([JSON.stringify(payload, null, 1)], { type: "application/json;charset=utf-8" });
     var a = document.createElement("a");
     a.href = URL.createObjectURL(blob);
-    a.download = "el_salvador_power_risk_register.csv";
+    a.download = "el_salvador_power_risk.json";
     document.body.appendChild(a); a.click();
     setTimeout(function () { URL.revokeObjectURL(a.href); a.remove(); }, 1000);
   }

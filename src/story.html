@@ -18,7 +18,7 @@
     <h1 id="hero-title">Power under pressure</h1>
     <p class="s-stand">Floods, droughts and heatwaves are getting stronger in El Salvador. An IRENA assessment, carried out with the General Directorate of Energy, Hydrocarbons and Mines (DGEHM), maps what that means for every asset on the grid.</p>
     <div class="s-meta">
-      <span>5&nbsp;184 assets</span><span>3 hazards</span><span>2 periods</span>
+      <span>{{n_assets}} assets</span><span>3 hazards</span><span>2 periods</span>
     </div>
     <span class="s-scroll" aria-hidden="true">Scroll to read</span>
   </div>
@@ -33,7 +33,7 @@
         <div class="mapkey"><span>Less change</span><i id="mapramp"></i><span>More change</span></div>
       </div>
       <div class="vis" data-vis="waffle">
-        <p class="vis-title"><svg class="ic" aria-hidden="true"><use href="#i-substation"/></svg><span id="wf-title">159 substations</span></p>
+        <p class="vis-title"><svg class="ic" aria-hidden="true"><use href="#i-substation"/></svg><span id="wf-title">{{n_substations}} substations</span></p>
         <div class="waffle" id="waffle"></div>
         <div class="vlegend"><span><i style="background:#5C7285"></i>Low</span><span><i style="background:#8FB4CE"></i>Moderate</span><span><i style="background:#0073AB"></i>High</span><span><i style="background:#B03218"></i>Critical</span></div>
         <p class="vis-note" id="wf-note"></p>
@@ -45,17 +45,17 @@
         <p class="vis-note">Each square is one plant. Dark squares are at high or critical drought risk.</p>
       </div>
       <div class="vis" data-vis="solar">
-        <p class="vis-title"><svg class="ic" aria-hidden="true"><use href="#i-solar"/></svg>1&nbsp;941 solar PV installations</p>
+        <p class="vis-title"><svg class="ic" aria-hidden="true"><use href="#i-solar"/></svg>{{solar_n}} solar PV installations</p>
         <p class="vis-lead" id="solar-lead"></p>
         <div class="solarbars" id="solarbars"></div>
         <div class="vlegend"><span><i style="background:#5C7285"></i>Low</span><span><i style="background:#8FB4CE"></i>Moderate</span><span class="vlg-note">no installation reaches high or critical heat risk</span></div>
         <p class="vis-note">Share of installations by heatwave risk, near term and by mid-century.</p>
       </div>
       <div class="vis" data-vis="towers">
-        <p class="vis-title"><svg class="ic" aria-hidden="true"><use href="#i-tower"/></svg>3&nbsp;026 transmission towers</p>
+        <p class="vis-title"><svg class="ic" aria-hidden="true"><use href="#i-tower"/></svg>{{n_towers}} transmission towers</p>
         <div class="towers" id="towers"></div>
         <div class="vlegend"><span><i style="background:#5C7285"></i>Low</span><span><i style="background:#8FB4CE"></i>Moderate</span><span><i style="background:#0073AB"></i>High</span></div>
-        <p class="vis-note">Near term, 220 towers at high or critical flood risk (7%). By 2041&ndash;2070, 978 (32%).</p>
+        <p class="vis-note">Near term, {{tower_flood_near_n}} towers at high or critical flood risk ({{tower_flood_near_pct}}%). By 2041&ndash;2070, {{tower_flood_mid_n}} ({{tower_flood_mid_pct}}%).</p>
       </div>
     </div>
   </div>
@@ -95,19 +95,19 @@
     <article class="s-step" data-vis="waffle" data-waffle="s">
       <span class="k"><svg class="ic" aria-hidden="true"><use href="#i-substation"/></svg>Substations &middot; near term</span>
       <h3>More than half of substations already at high flood risk</h3>
-      <p>Of the country&rsquo;s 159 substations, 89 (56%) face high or critical flood risk in the near term, 16 of them critical.</p>
+      <p>Of the country&rsquo;s {{n_substations}} substations, {{sub_flood_near_n}} ({{sub_flood_near_pct}}%) face high or critical flood risk in the near term, {{sub_flood_near_critical}} of them critical.</p>
     </article>
 
     <article class="s-step" data-vis="waffle" data-waffle="m">
       <span class="k"><svg class="ic" aria-hidden="true"><use href="#i-substation"/></svg>Substations &middot; mid-century</span>
       <h3>Four in five by mid-century</h3>
-      <p>By 2041&ndash;2070 this rises to 128 substations (81%), with 47 at critical risk. For transmission substations, the backbone of the grid, it reaches 90%.</p>
+      <p>By 2041&ndash;2070 this rises to {{sub_flood_mid_n}} substations ({{sub_flood_mid_pct}}%), with {{sub_flood_mid_critical}} at critical risk. For transmission substations, the backbone of the grid, it reaches {{tsub_flood_mid_pct}}%.</p>
     </article>
 
     <article class="s-step" data-vis="waffle" data-waffle="heat">
       <span class="k"><svg class="ic" aria-hidden="true"><use href="#i-heat"/></svg>Heat</span>
       <h3>Every substation feels the heat</h3>
-      <p>Heat puts transformers under stress. In the near term, 14 substations face high heatwave risk. By mid-century, all 159 do.</p>
+      <p>Heat puts transformers under stress. In the near term, {{sub_heat_near_n}} substations face high heatwave risk. By mid-century, all {{sub_heat_mid_n}} do.</p>
     </article>
 
     <article class="s-step" data-vis="hydro">
@@ -120,14 +120,14 @@
     <article class="s-step" data-vis="solar">
       <span class="k"><svg class="ic" aria-hidden="true"><use href="#i-solar"/></svg>Solar PV</span>
       <h3>Solar panels lose efficiency in the heat</h3>
-      <p>The country has 1&nbsp;941 solar PV installations, most of them small distributed systems. Today, 14% face moderate heatwave risk.</p>
+      <p>The country has {{solar_n}} solar PV installations, most of them small distributed systems. Today, {{solar_heat_near_moderate_pct}}% face moderate heatwave risk.</p>
       <p>By mid-century, almost all of them do, and the panels themselves lose output as temperatures climb.</p>
     </article>
 
     <article class="s-step" data-vis="towers">
       <span class="k"><svg class="ic" aria-hidden="true"><use href="#i-tower"/></svg>Transmission</span>
       <h3>Towers follow the same curve</h3>
-      <p>Transmission towers at high or critical flood risk rise from 7% to 32%, and 978 of the 3&nbsp;026 towers reach that level by 2041&ndash;2070.</p>
+      <p>Transmission towers at high or critical flood risk rise from {{tower_flood_near_pct}}% to {{tower_flood_mid_pct}}%, and {{tower_flood_mid_n}} of the {{n_towers}} towers reach that level by 2041&ndash;2070.</p>
     </article>
   </div>
 </section>

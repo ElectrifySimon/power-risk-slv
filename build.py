@@ -117,14 +117,33 @@ def _v(path):
     return hashlib.md5(open(path, "rb").read()).hexdigest()[:8]
 
 
+
+def fmt_num(v):
+    s = f"{v:,}".replace(",", "&nbsp;")
+    return s
+
+
+def tokens(obj, text):
+    """Replace {{key}} with a figure from the consolidated data file."""
+    import re as _re
+
+    def sub(m):
+        key = m.group(1)
+        if key not in obj:
+            raise KeyError(f"story token {{{{{key}}}}} has no value in data/power-risk-slv.json")
+        return fmt_num(obj[key])
+
+    return _re.sub(r"\{\{([a-z0-9_]+)\}\}", sub, text)
+
+
 def main():
-    data = json.load(open(os.path.join(ROOT, "data", "slv.json"), encoding="utf-8"))
-    data["GEO"] = load_geo()
+    data = json.load(open(os.path.join(ROOT, "data", "power-risk-slv.json"), encoding="utf-8"))
     data["build"] = datetime.datetime.now(datetime.timezone.utc).strftime("%-d %B %Y")
 
     css = fonts_css(open(os.path.join(ROOT, "src", "page.css"), encoding="utf-8").read())
     css += open(os.path.join(ROOT, "src", "story.css"), encoding="utf-8").read()
     story_html = open(os.path.join(ROOT, "src", "story.html"), encoding="utf-8").read()
+    story_html = tokens(data["derived"], story_html)
     body = open(os.path.join(ROOT, "src", "page.html"), encoding="utf-8").read()
     js = open(os.path.join(ROOT, "src", "app.js"), encoding="utf-8").read()
     js2 = open(os.path.join(ROOT, "src", "story.js"), encoding="utf-8").read()
