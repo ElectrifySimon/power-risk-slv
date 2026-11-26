@@ -324,3 +324,8 @@ footer .disclaimer{color:#5F6E7D;font-size:11.5px;line-height:1.55;max-width:98c
 
 .vh{display:flex;align-items:center;gap:10px}
 .vh .ic{width:22px;height:22px;color:var(--brand);flex:0 0 22px}
+
+.chip{display:inline-flex;align-items:center;gap:7px}
+.chip .ic{width:16px;height:16px;flex:0 0 16px;color:#33475B;opacity:1}
+.chip[aria-pressed=true] .ic{color:var(--brand)}
+.chip[aria-pressed=true] .ic{opacity:1}

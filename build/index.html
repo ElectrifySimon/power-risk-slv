@@ -331,6 +331,11 @@ footer .disclaimer{color:#5F6E7D;font-size:11.5px;line-height:1.55;max-width:98c
 
 .vh{display:flex;align-items:center;gap:10px}
 .vh .ic{width:22px;height:22px;color:var(--brand);flex:0 0 22px}
+
+.chip{display:inline-flex;align-items:center;gap:7px}
+.chip .ic{width:16px;height:16px;flex:0 0 16px;color:#33475B;opacity:1}
+.chip[aria-pressed=true] .ic{color:var(--brand)}
+.chip[aria-pressed=true] .ic{opacity:1}
 /* Story: dark act, sticky visuals, layered parallax. */
 
 .story{position:relative;background:#071627;color:#E9F1F8;overflow-x:clip}
@@ -1243,7 +1248,19 @@ document.getElementById("sprite").innerHTML = "<symbol id=\"i-re-bioenergy\" vie
     mini.appendChild(cap);
   }
 
-  /* ---------- measures ---------- */
+  
+var CHIPICON = {
+  "Hydropower": "i-re-hydropower", "Solar PV": "i-re-solar", "Bioenergy": "i-re-bioenergy",
+  "Biomass": "i-re-bioenergy", "Biogas": "i-re-bioenergy", "Geothermal": "i-re-geothermal",
+  "Wind": "i-re-wind", "Fossil thermal": "i-fossil", "Substations": "i-substation",
+  "T&D lines": "i-grid", "Transmission lines": "i-grid", "Transmission towers": "i-tower"
+};
+function chipIcon(name) {
+  var id = CHIPICON[name];
+  return id ? '<svg class="ic" aria-hidden="true"><use href="#' + id + '"/></svg>' : "";
+}
+
+/* ---------- measures ---------- */
   var MS = { a: "All", h: "all" };
   function renderMeasures() {
     var assets = ["All"].concat(MEAS.map(function (m) { return m.a; }).filter(function (v, i, s) { return s.indexOf(v) === i; }));
@@ -1251,7 +1268,8 @@ document.getElementById("sprite").innerHTML = "<symbol id=\"i-re-bioenergy\" vie
     assets.forEach(function (a) {
       var b = document.createElement("button");
       b.className = "chip"; b.type = "button";
-      b.setAttribute("aria-pressed", MS.a === a); b.textContent = a;
+      b.setAttribute("aria-pressed", MS.a === a);
+      b.innerHTML = chipIcon(a) + "<span>" + a + "</span>";
       b.onclick = function () { MS.a = a; renderMeasures(); };
       ca.appendChild(b);
     });

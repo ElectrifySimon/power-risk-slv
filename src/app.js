@@ -279,7 +279,19 @@
     mini.appendChild(cap);
   }
 
-  /* ---------- measures ---------- */
+  
+var CHIPICON = {
+  "Hydropower": "i-re-hydropower", "Solar PV": "i-re-solar", "Bioenergy": "i-re-bioenergy",
+  "Biomass": "i-re-bioenergy", "Biogas": "i-re-bioenergy", "Geothermal": "i-re-geothermal",
+  "Wind": "i-re-wind", "Fossil thermal": "i-fossil", "Substations": "i-substation",
+  "T&D lines": "i-grid", "Transmission lines": "i-grid", "Transmission towers": "i-tower"
+};
+function chipIcon(name) {
+  var id = CHIPICON[name];
+  return id ? '<svg class="ic" aria-hidden="true"><use href="#' + id + '"/></svg>' : "";
+}
+
+/* ---------- measures ---------- */
   var MS = { a: "All", h: "all" };
   function renderMeasures() {
     var assets = ["All"].concat(MEAS.map(function (m) { return m.a; }).filter(function (v, i, s) { return s.indexOf(v) === i; }));
@@ -287,7 +299,8 @@
     assets.forEach(function (a) {
       var b = document.createElement("button");
       b.className = "chip"; b.type = "button";
-      b.setAttribute("aria-pressed", MS.a === a); b.textContent = a;
+      b.setAttribute("aria-pressed", MS.a === a);
+      b.innerHTML = chipIcon(a) + "<span>" + a + "</span>";
       b.onclick = function () { MS.a = a; renderMeasures(); };
       ca.appendChild(b);
     });
