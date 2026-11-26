@@ -7,7 +7,9 @@
   var CLS = ["low", "mod", "high", "crit"];
   var COL = { low: "#E4EBF2", mod: "#93AFC8", high: "#0073AB", crit: "#B03218" };
   var HAZCOL = { flood: "#0073AB", drought: "#8A6A3A", heat: "#B03218" };
-  var ICON = { hydro: "i-hydropower", solar: "i-solar", geo: "i-geothermal", wind: "i-wind", biomass: "i-bioenergy", biogas: "i-bioenergy" };
+  var ICON = { hydro: "i-re-hydropower", solar: "i-re-solar", geo: "i-re-geothermal", wind: "i-re-wind",
+    biomass: "i-re-bioenergy", biogas: "i-re-bioenergy", ocean: "i-re-ocean",
+    fossil: "i-fossil", substation: "i-substation", tower: "i-tower", line: "i-grid", grid: "i-grid" };
 
   var $ = function (s, r) { return (r || document).querySelector(s); };
   var sum = function (a) { return a.reduce(function (x, y) { return x + y; }, 0); };

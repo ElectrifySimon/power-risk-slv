@@ -83,6 +83,10 @@ def load_geo():
 def icon_sprite():
     base = os.path.join(ROOT, "vendor", "icons")
     out = []
+    re_path = os.path.join(ROOT, "vendor", "irena", "re-icons.svg")
+    if os.path.exists(re_path):
+        re_raw = open(re_path, encoding="utf-8").read()
+        out.extend(re.findall(r"<symbol.*?</symbol>", re_raw, flags=re.S))
     for f in sorted(os.listdir(base)):
         if not f.endswith(".svg"):
             continue

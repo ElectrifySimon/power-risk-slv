@@ -263,7 +263,7 @@ footer .disclaimer{color:#5F6E7D;font-size:11.5px;line-height:1.55;max-width:98c
 .ic{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;
   stroke-linejoin:round;flex:0 0 auto;vertical-align:-2px}
 .tab{display:inline-flex;align-items:center;gap:8px}
-.tab .ic{width:16px;height:16px;opacity:.72}
+.tab .ic{width:18px;height:18px;flex:0 0 18px}
 .tab[aria-selected=true] .ic{opacity:1;color:var(--brand)}
 .seg button .ic{width:15px;height:15px}
 .back{display:inline-flex;align-items:center;gap:8px}
@@ -283,7 +283,7 @@ footer .disclaimer{color:#5F6E7D;font-size:11.5px;line-height:1.55;max-width:98c
   .tabrow{flex-wrap:wrap;gap:8px}
   .tabs{width:100%;overflow:auto}
   .tab{padding:11px 10px;font-size:13px}
-  .tab .ic{width:15px;height:15px}
+  .tab .ic{width:18px;height:18px;flex:0 0 18px}
   .tabrow .btn{width:100%;justify-content:center}
   .kpis{grid-template-columns:1fr 1fr;gap:8px}
   .kpi{padding:13px 12px 13px}
@@ -318,3 +318,6 @@ footer .disclaimer{color:#5F6E7D;font-size:11.5px;line-height:1.55;max-width:98c
   .mast .org{font-size:10.5px;letter-spacing:.06em}
   .mast .right{margin-left:auto}
 }
+.tab .ic{stroke-width:2}
+.tab[aria-selected=false]{color:#5B6B7A}
+.tab[aria-selected=false] .ic{opacity:1}
