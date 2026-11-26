@@ -473,6 +473,8 @@ footer .disclaimer{color:#5F6E7D;font-size:11.5px;line-height:1.55;max-width:98c
   .mapwrap{max-width:100%}
   .mapkey{margin-top:10px}
 }
+
+.vlegend .vlg-note{color:rgba(233,241,248,.5);font-weight:400}
 </style>
 </head>
 <body>
@@ -513,7 +515,7 @@ footer .disclaimer{color:#5F6E7D;font-size:11.5px;line-height:1.55;max-width:98c
       <div class="vis" data-vis="waffle">
         <p class="vis-title"><svg class="ic" aria-hidden="true"><use href="#i-substation"/></svg><span id="wf-title">159 substations</span></p>
         <div class="waffle" id="waffle"></div>
-        <div class="vlegend"><span><i style="background:#C8D4DF"></i>Low</span><span><i style="background:#8FB4CE"></i>Moderate</span><span><i style="background:#0073AB"></i>High</span><span><i style="background:#B03218"></i>Critical</span></div>
+        <div class="vlegend"><span><i style="background:#5C7285"></i>Low</span><span><i style="background:#8FB4CE"></i>Moderate</span><span><i style="background:#0073AB"></i>High</span><span><i style="background:#B03218"></i>Critical</span></div>
         <p class="vis-note" id="wf-note"></p>
       </div>
       <div class="vis" data-vis="hydro">
@@ -526,13 +528,13 @@ footer .disclaimer{color:#5F6E7D;font-size:11.5px;line-height:1.55;max-width:98c
         <p class="vis-title"><svg class="ic" aria-hidden="true"><use href="#i-solar"/></svg>1&nbsp;941 solar PV installations</p>
         <p class="vis-lead" id="solar-lead"></p>
         <div class="solarbars" id="solarbars"></div>
-        <div class="vlegend"><span><i style="background:#C8D4DF"></i>Low</span><span><i style="background:#8FB4CE"></i>Moderate</span><span><i style="background:#0073AB"></i>High</span><span><i style="background:#B03218"></i>Critical</span></div>
+        <div class="vlegend"><span><i style="background:#5C7285"></i>Low</span><span><i style="background:#8FB4CE"></i>Moderate</span><span class="vlg-note">no installation reaches high or critical heat risk</span></div>
         <p class="vis-note">Share of installations by heatwave risk, near term and by mid-century.</p>
       </div>
       <div class="vis" data-vis="towers">
         <p class="vis-title"><svg class="ic" aria-hidden="true"><use href="#i-tower"/></svg>3&nbsp;026 transmission towers</p>
         <div class="towers" id="towers"></div>
-        <div class="vlegend"><span><i style="background:#C8D4DF"></i>Low</span><span><i style="background:#8FB4CE"></i>Moderate</span><span><i style="background:#0073AB"></i>High</span></div>
+        <div class="vlegend"><span><i style="background:#5C7285"></i>Low</span><span><i style="background:#8FB4CE"></i>Moderate</span><span><i style="background:#0073AB"></i>High</span></div>
         <p class="vis-note">Near term, 220 towers at high or critical flood risk (7%). By 2041&ndash;2070, 978 (32%).</p>
       </div>
     </div>
@@ -1456,7 +1458,7 @@ document.getElementById("sprite").innerHTML = "<symbol id=\"i-biomass\" viewBox=
     heat: { arr: totals("heat", "m", SUBS), title: "159 substations", note: "2041\u20132070: all 159 at high or critical heatwave risk, against 14 in the near term." }
   };
   /* ---------- ECharts ---------- */
-  var CLASSCOL = ["#C8D4DF", "#8FB4CE", "#0073AB", "#B03218"];
+  var CLASSCOL = ["#5C7285", "#8FB4CE", "#0073AB", "#B03218"];
   var CHARTS = {};
   var ANIM = !reduce && !!window.echarts;
 
@@ -1528,10 +1530,10 @@ document.getElementById("sprite").innerHTML = "<symbol id=\"i-biomass\" viewBox=
     var near = totals("heat", "s", ["solar"]), mid = totals("heat", "m", ["solar"]);
     var t = function (a) { return a.reduce(function (x, y) { return x + y; }, 0); };
     var tn = t(near), tm = t(mid);
-    var riskN = near[1] + near[2] + near[3], riskM = mid[1] + mid[2] + mid[3];
+    var riskN = near[1], riskM = mid[1];
     var lead = document.getElementById("solar-lead");
-    if (lead) lead.innerHTML = fmtN2(riskN) + " installations at moderate heat risk today, " +
-      fmtN2(riskM) + " by mid-century";
+    if (lead) lead.innerHTML = fmtN2(riskN) + " installations at moderate heat risk today. By 2041&ndash;2070 it is " +
+      fmtN2(riskM) + ", 99.7% of the fleet.";
 
     var c = chart("solarbars"); if (!c) return;
     var names = ["Low", "Moderate", "High", "Critical"];
@@ -1560,10 +1562,9 @@ document.getElementById("sprite").innerHTML = "<symbol id=\"i-biomass\" viewBox=
         return {
           name: n, type: "bar", stack: "risk", barWidth: 30, data: [A[i], B[i]],
           itemStyle: { color: CLASSCOL[i], borderRadius: i === 3 ? [0, 4, 4, 0] : 0 },
-          label: { show: true, position: "inside", color: i === 0 ? "#0E2233" : "#fff", fontSize: 11, fontWeight: 600,
+          label: { show: true, position: "inside", color: "#fff", fontSize: 11, fontWeight: 700,
             formatter: function (p2) {
-              var v2 = p2.dataIndex === 0 ? AN[i] : BN[i];
-              return p2.value >= 8 && v2 ? fmtN2(v2) : "";
+              return p2.value >= 8 ? (p2.value >= 99.5 ? p2.value.toFixed(1) : Math.round(p2.value)) + "%" : "";
             } }
         };
       })

@@ -92,7 +92,7 @@
     heat: { arr: totals("heat", "m", SUBS), title: "159 substations", note: "2041\u20132070: all 159 at high or critical heatwave risk, against 14 in the near term." }
   };
   /* ---------- ECharts ---------- */
-  var CLASSCOL = ["#C8D4DF", "#8FB4CE", "#0073AB", "#B03218"];
+  var CLASSCOL = ["#5C7285", "#8FB4CE", "#0073AB", "#B03218"];
   var CHARTS = {};
   var ANIM = !reduce && !!window.echarts;
 
@@ -164,10 +164,10 @@
     var near = totals("heat", "s", ["solar"]), mid = totals("heat", "m", ["solar"]);
     var t = function (a) { return a.reduce(function (x, y) { return x + y; }, 0); };
     var tn = t(near), tm = t(mid);
-    var riskN = near[1] + near[2] + near[3], riskM = mid[1] + mid[2] + mid[3];
+    var riskN = near[1], riskM = mid[1];
     var lead = document.getElementById("solar-lead");
-    if (lead) lead.innerHTML = fmtN2(riskN) + " installations at moderate heat risk today, " +
-      fmtN2(riskM) + " by mid-century";
+    if (lead) lead.innerHTML = fmtN2(riskN) + " installations at moderate heat risk today. By 2041&ndash;2070 it is " +
+      fmtN2(riskM) + ", 99.7% of the fleet.";
 
     var c = chart("solarbars"); if (!c) return;
     var names = ["Low", "Moderate", "High", "Critical"];
@@ -196,10 +196,9 @@
         return {
           name: n, type: "bar", stack: "risk", barWidth: 30, data: [A[i], B[i]],
           itemStyle: { color: CLASSCOL[i], borderRadius: i === 3 ? [0, 4, 4, 0] : 0 },
-          label: { show: true, position: "inside", color: i === 0 ? "#0E2233" : "#fff", fontSize: 11, fontWeight: 600,
+          label: { show: true, position: "inside", color: "#fff", fontSize: 11, fontWeight: 700,
             formatter: function (p2) {
-              var v2 = p2.dataIndex === 0 ? AN[i] : BN[i];
-              return p2.value >= 8 && v2 ? fmtN2(v2) : "";
+              return p2.value >= 8 ? (p2.value >= 99.5 ? p2.value.toFixed(1) : Math.round(p2.value)) + "%" : "";
             } }
         };
       })

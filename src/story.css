@@ -147,3 +147,5 @@
   .mapwrap{max-width:100%}
   .mapkey{margin-top:10px}
 }
+
+.vlegend .vlg-note{color:rgba(233,241,248,.5);font-weight:400}
