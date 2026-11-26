@@ -307,45 +307,82 @@
   }
   activate(steps[0]);
 
-  /* ---------- hero aurora (React Bits soft-aurora look, vanilla canvas) ---------- */
+  /* ---------- hero: ghost fibers (React Bits ghost-fibers look, vanilla canvas) ---------- */
   function heroField() {
     var cv = document.getElementById("bgfx"); if (!cv) return;
     var ctx = cv.getContext("2d"), dpr = Math.min(window.devicePixelRatio || 1, 1.5);
     var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    var W = 0, H = 0, raf = null, on = true, last = 0, tt = 0;
-    var blobs = [
-      { c: [0, 115, 171], ax: 0.20, ay: 0.14, sp: 0.10, ph: 0.0, r: 0.62, a: 0.30 },
-      { c: [142, 197, 255], ax: 0.27, ay: 0.20, sp: 0.065, ph: 1.7, r: 0.50, a: 0.24 },
-      { c: [32, 104, 148], ax: 0.15, ay: 0.22, sp: 0.045, ph: 3.1, r: 0.74, a: 0.28 },
-      { c: [226, 176, 120], ax: 0.30, ay: 0.16, sp: 0.04, ph: 4.4, r: 0.38, a: 0.09 }
-    ];
+    var W = 0, H = 0, raf = null, on = true, last = 0, tt = 0, F = [];
+    var rand = function (a, b) { return a + Math.random() * (b - a); };
+
+    function build() {
+      F = [];
+      var n = Math.round(Math.min(120, Math.max(48, W / 14)));
+      for (var i = 0; i < n; i++) {
+        var z = Math.pow(Math.random(), 1.5) * 0.85 + 0.15;
+        F.push({
+          z: z,
+          y0: rand(0.04, 0.96),
+          amp: rand(0.03, 0.13),
+          freq: rand(1.1, 2.6),
+          sp: rand(0.06, 0.22),
+          ph: rand(0, 6.283),
+          drift: rand(-0.012, 0.012),
+          a: rand(0.08, 0.26) * (0.4 + z * 0.8)
+        });
+      }
+      F.sort(function (p, q) { return p.z - q.z; });
+    }
+
     function size() {
       W = cv.clientWidth; H = cv.clientHeight;
       cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr);
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      build();
     }
+
+    function path(f, t) {
+      var step = Math.max(6, W / 56), y0 = (f.y0 + t * f.drift) % 1;
+      if (y0 < 0) y0 += 1;
+      var base = y0 * H;
+      ctx.beginPath();
+      for (var x = -W * 0.06; x <= W * 1.06; x += step) {
+        var u = x / W;
+        var y = base
+          + Math.sin(u * 6.283 * f.freq + t * f.sp + f.ph) * f.amp * H * 0.55
+          + Math.sin(u * 6.283 * f.freq * 2.3 - t * f.sp * 0.7 + f.ph * 1.7) * f.amp * H * 0.22;
+        x === -W * 0.06 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+      }
+    }
+
     function draw() {
       if (!W || !H) return;
       ctx.clearRect(0, 0, W, H);
+      // static depth base
+      var g = ctx.createRadialGradient(W * 0.52, H * 0.34, 0, W * 0.52, H * 0.34, Math.max(W, H) * 0.62);
+      g.addColorStop(0, "rgba(0,115,171,0.20)");
+      g.addColorStop(0.55, "rgba(16,64,102,0.10)");
+      g.addColorStop(1, "rgba(7,22,39,0)");
+      ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+
       ctx.globalCompositeOperation = "lighter";
-      for (var i = 0; i < blobs.length; i++) {
-        var b = blobs[i];
-        var px = (0.5 + Math.sin(tt * b.sp + b.ph) * b.ax) * W;
-        var py = (0.44 + Math.cos(tt * b.sp * 0.8 + b.ph * 1.3) * b.ay) * H;
-        var r = Math.max(W, H) * b.r * (0.9 + 0.1 * Math.sin(tt * b.sp * 1.3 + i));
-        var g = ctx.createRadialGradient(px, py, 0, px, py, r);
-        var rgb = b.c[0] + "," + b.c[1] + "," + b.c[2];
-        g.addColorStop(0, "rgba(" + rgb + "," + b.a.toFixed(3) + ")");
-        g.addColorStop(0.45, "rgba(" + rgb + "," + (b.a * 0.38).toFixed(3) + ")");
-        g.addColorStop(1, "rgba(" + rgb + ",0)");
-        ctx.fillStyle = g;
-        ctx.beginPath(); ctx.arc(px, py, r, 0, 6.2832); ctx.fill();
+      for (var i = 0; i < F.length; i++) {
+        var f = F[i], blur = f.z < 0.4 ? 1.6 : 0;
+        if (blur && "filter" in ctx) ctx.filter = "blur(" + blur + "px)";
+        path(f, tt);
+        ctx.strokeStyle = "rgba(142,197,255," + (f.a * 0.30).toFixed(3) + ")";
+        ctx.lineWidth = 3.2 * f.z + 0.8; ctx.stroke();
+        path(f, tt);
+        ctx.strokeStyle = "rgba(214,236,255," + f.a.toFixed(3) + ")";
+        ctx.lineWidth = 0.7 + f.z * 0.9; ctx.stroke();
+        if (blur && "filter" in ctx) ctx.filter = "none";
       }
       ctx.globalCompositeOperation = "source-over";
     }
+
     function loop(ts) {
       if (!on) return;
-      if (ts - last > 32) { tt = ts / 1000; draw(); last = ts; }
+      if (ts - last > 33) { tt = ts / 1000; draw(); last = ts; }
       raf = requestAnimationFrame(loop);
     }
     size(); draw();
