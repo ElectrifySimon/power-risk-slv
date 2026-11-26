@@ -264,3 +264,11 @@ svg.ul-band{position:absolute;inset:0;pointer-events:none;overflow:visible;z-ind
   transition:background-size 760ms cubic-bezier(.22,.9,.24,1);
   -webkit-box-decoration-break:clone;box-decoration-break:clone}
 .ul-target.drawn{background-size:100% 2px}
+
+/* panel switch reads as a morph, not a cut */
+.vis{opacity:0;transform:translateY(10px) scale(.985);
+  transition:opacity 460ms cubic-bezier(.4,0,.2,1),transform 620ms cubic-bezier(.4,0,.2,1);will-change:opacity,transform}
+.vis.on{opacity:1;transform:none}
+@media (max-width:720px){.vis{transform:none}}
+
+#waffle,#solarbars,#towers,#plants{position:relative}

@@ -92,18 +92,40 @@ function drawBand(el) {
     rect.setAttribute("fill", "rgba(255,186,110,0.28)");
     rect.style.transformOrigin = `${x}px center`;
     rect.style.transform = "scaleX(0)";
-    rect.style.transition = `transform 720ms cubic-bezier(.22,.9,.24,1) ${i * 80}ms`;
+    rect.dataset.delay = String(i * 80);
     svg.appendChild(rect);
-    requestAnimationFrame(() => requestAnimationFrame(() => { rect.style.transform = "scaleX(1)"; }));
   });
 }
 
 function drawAllBands() { HEADS.forEach(drawBand); }
 drawAllBands();
-if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => setTimeout(drawAllBands, 80));
-window.addEventListener("resize", () => setTimeout(drawAllBands, 120));
 
-// Targeted underlines: explicit phrase list, longest first, one per block.
+// Titles sit in a stacked sticky stage, so reveal each band when its beat turns on.
+function revealBand(el) {
+  if (el.dataset.revealed) return;
+  el.dataset.revealed = "1";
+  el.querySelectorAll("svg.ul-band rect").forEach((rect) => {
+    rect.style.transition = `transform 720ms cubic-bezier(.22,.9,.24,1) ${rect.dataset.delay || 0}ms`;
+    requestAnimationFrame(() => requestAnimationFrame(() => { rect.style.transform = "scaleX(1)"; }));
+  });
+}
+function revealForStep(step) {
+  step.querySelectorAll(".s-step h3, .s-cta h2, h3, h2").forEach(revealBand);
+}
+const steps = [...document.querySelectorAll(".s-step")];
+steps.forEach((st) => { if (st.classList.contains("on")) revealForStep(st); });
+if (steps.length) {
+  new MutationObserver((muts) => {
+    muts.forEach((m) => {
+      if (m.attributeName === "class" && m.target.classList.contains("on")) revealForStep(m.target);
+    });
+  }).observe(steps[0].parentElement, { attributes: true, subtree: true, attributeFilter: ["class"] });
+}
+const cta = document.querySelector(".s-cta");
+const ctaObs = new MutationObserver(() => {});
+requestAnimationFrame(() => { if (cta) revealForStep(cta); });
+
+// ---- targeted underlines -------------------------------------------------
 const PHRASES = [
   "Climate Risk Assessment Tool",
   "every number behind this story",
@@ -140,10 +162,6 @@ function wrapPhrase(block, phrase) {
   return span;
 }
 
-function drawUnderline(block, span) {
-  span.classList.add("drawn");
-}
-
 const UL = [];
 const usedBlocks = new Set();
 PHRASES.forEach((phrase) => {
@@ -157,14 +175,12 @@ PHRASES.forEach((phrase) => {
 });
 
 function drawVisible() {
-  const h = window.innerHeight;
+  const vh = window.innerHeight;
   UL.forEach((t) => {
     if (t.done) return;
     const r = t.block.getBoundingClientRect();
-    if (r.top < h * 0.9 && r.bottom > 0) { t.done = true; drawUnderline(t.block, t.span); }
+    if (r.top < vh * 0.9 && r.bottom > 0) { t.done = true; t.span.classList.add("drawn"); }
   });
 }
-
 drawVisible();
 window.addEventListener("scroll", () => requestAnimationFrame(drawVisible), { passive: true });
-

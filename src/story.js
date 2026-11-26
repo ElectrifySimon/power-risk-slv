@@ -107,6 +107,34 @@
   }
 
   var lastWf = "s", CUR = {};
+
+  /* Cross-fade the canvas while the option changes: ECharts tweens position
+     but snaps colour, so a recolour-only change reads as a jump without this. */
+  var MORPH_MS = 520;
+  function morphCanvas(el, fn) {
+    if (!el || reduce) { fn(); return; }
+    var c = window.echarts && window.echarts.getInstanceByDom(el);
+    var ghost = null;
+    try {
+      var url = c && c.getDataURL({ pixelRatio: 2, backgroundColor: "transparent" });
+      if (url) {
+        ghost = document.createElement("img");
+        ghost.className = "morph-ghost";
+        ghost.src = url;
+        ghost.style.cssText = "position:absolute;inset:0;width:100%;height:100%;object-fit:contain;" +
+          "pointer-events:none;z-index:3;opacity:1;transition:opacity " + MORPH_MS + "ms ease";
+        el.appendChild(ghost);
+      }
+    } catch (e) { ghost = null; }
+    fn();
+    if (ghost) {
+      requestAnimationFrame(function () {
+        requestAnimationFrame(function () { ghost.style.opacity = "0"; });
+      });
+      setTimeout(function () { if (ghost.parentNode) ghost.parentNode.removeChild(ghost); }, MORPH_MS + 80);
+    }
+  }
+
   function buildWaffle(key) {
     if (CUR.waffle === key) return;
     CUR.waffle = key; lastWf = key;
@@ -124,7 +152,7 @@
     var el = document.getElementById("waffle");
     var w = (el && el.clientWidth) || 420;
     var cell = Math.max(8, Math.floor((w - (cols - 1) * 5) / cols));
-    c.setOption({
+    morphCanvas(el, function () { c.setOption({
       animation: ANIM, animationDuration: 700, animationDurationUpdate: 1100,
       animationEasing: "cubicOut", animationEasingUpdate: "quinticInOut",
       animationDelay: function (idx) { return idx * 4; },
@@ -134,7 +162,7 @@
       yAxis: { type: "value", min: -0.5, max: rows - 0.5, inverse: true, show: false },
       series: [{ id: "cells", type: "scatter", symbol: "rect", symbolSize: cell - 4, silent: true, data: data,
         universalTransition: { enabled: true, divideShape: "clone" } }]
-    });
+    }); });
   }
 
   function buildPlants() {
@@ -290,14 +318,25 @@
     requestAnimationFrame(function () { requestAnimationFrame(draw); });
     setTimeout(draw, 120);
   }
-  if ("IntersectionObserver" in window) {
-    var io = new IntersectionObserver(function (entries) {
-      entries.forEach(function (e) {
-        if (e.isIntersecting) activate(e.target);
-      });
-    }, { rootMargin: "-45% 0px -45% 0px", threshold: 0 });
-    steps.forEach(function (s) { io.observe(s); });
+  /* Deterministic beat selection: the step nearest the viewport centre wins.
+     The old IntersectionObserver could leave two steps in the band, so the
+     previous beat kept the chart and the next beat never updated it. */
+  var active = -1;
+  function pick() {
+    var mid = window.innerHeight * 0.5, best = -1, bestd = 1e9;
+    steps.forEach(function (s, i) {
+      var r = s.getBoundingClientRect();
+      if (r.bottom < 0 || r.top > window.innerHeight) return;
+      var d = Math.abs(r.top + r.height / 2 - mid);
+      if (d < bestd) { bestd = d; best = i; }
+    });
+    if (best >= 0 && best !== active) { active = best; activate(steps[best]); }
   }
+  var pt;
+  function onScroll() { if (pt) return; pt = setTimeout(function () { pt = null; pick(); }, 90); }
+  window.addEventListener("scroll", onScroll, { passive: true });
+  window.addEventListener("resize", pick);
+  pick();
   buildPlants(); buildSolar(); buildTowers(); buildWaffle("s");
   activate(steps[0]);
 
