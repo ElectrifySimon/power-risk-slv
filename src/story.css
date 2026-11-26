@@ -246,3 +246,8 @@ body.dashmode body.dashmode #story{display:none}
   vertical-align: -0.12em;
   border-radius: 1px;
 }
+
+.ul-target{display:inline;background:none}
+.s-step p,.s-cta p,.s-hero .s-stand{position:relative}
+svg.ul-line{position:absolute;inset:0;pointer-events:none;overflow:visible;z-index:0}
+.s-step p>*,.s-cta p>*,.s-hero .s-stand>*{position:relative;z-index:1}
