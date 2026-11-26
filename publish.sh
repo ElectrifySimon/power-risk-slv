@@ -8,6 +8,8 @@ python3 build.py
 rm -rf gated
 mkdir -p gated
 cp build/index.html gated/index.html
+mkdir -p gated/vendor
+cp vendor/echarts.min.js gated/vendor/echarts.min.js
 
 PASS="$(cat .passphrase)"
 

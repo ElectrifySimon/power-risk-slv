@@ -135,6 +135,7 @@ def main():
 <div id="app" class="app">
 {body}
 </div>
+<script src="vendor/echarts.min.js"></script>
 <script>
 var DATA = {json.dumps(data, ensure_ascii=False, separators=(",", ":"))};
 document.getElementById("sprite").innerHTML = {json.dumps(sprite)};
@@ -145,6 +146,10 @@ document.getElementById("sprite").innerHTML = {json.dumps(sprite)};
 </html>
 """
     os.makedirs(os.path.join(ROOT, "build"), exist_ok=True)
+    os.makedirs(os.path.join(ROOT, "build", "vendor"), exist_ok=True)
+    import shutil as _sh
+    _sh.copy(os.path.join(ROOT, "vendor", "echarts.min.js"),
+             os.path.join(ROOT, "build", "vendor", "echarts.min.js"))
     out = os.path.join(ROOT, "build", "index.html")
     open(out, "w", encoding="utf-8").write(html)
     print(f"built {out} {len(html):,} chars, {len(data['GEO']['depts'])} departments, "

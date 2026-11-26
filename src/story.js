@@ -91,37 +91,104 @@
     m: { arr: totals("flood", "m", SUBS), title: "159 substations", note: "2041\u20132070: 128 of 159 at high or critical flood risk, 47 of them critical." },
     heat: { arr: totals("heat", "m", SUBS), title: "159 substations", note: "2041\u20132070: all 159 at high or critical heatwave risk, against 14 in the near term." }
   };
+  /* ---------- ECharts ---------- */
+  var CLASSCOL = ["#9FB3C6", "#93AFC8", "#0073AB", "#B03218"];
+  var CHARTS = {};
+  var ANIM = !reduce && !!window.echarts;
+
+  function chart(id) {
+    if (!window.echarts) return null;
+    if (!CHARTS[id]) {
+      var el = document.getElementById(id);
+      if (!el) return null;
+      CHARTS[id] = echarts.init(el, null, { renderer: "canvas" });
+    }
+    return CHARTS[id];
+  }
+
+  var lastWf = "s";
   function buildWaffle(key) {
-    var d = WF[key] || WF.s, box = $("#waffle"), order = [];
-    ["low", "mod", "high", "crit"].forEach(function (k, i) {
-      for (var j = 0; j < d.arr[i]; j++) order.push(k);
-    });
-    box.innerHTML = order.map(function (k) { return '<i class="' + k + '"></i>'; }).join("");
+    lastWf = key;
+    var d = WF[key] || WF.s;
     $("#wf-title").textContent = d.title;
     $("#wf-note").textContent = d.note;
+    var c = chart("waffle"); if (!c) return;
+    var cols = 16, rows = 10, data = [], i = 0;
+    d.arr.forEach(function (n, ci) {
+      for (var k = 0; k < n; k++) {
+        var j = i++; if (j >= cols * rows) break;
+        data.push({ value: [j % cols, Math.floor(j / cols)], itemStyle: { color: CLASSCOL[ci] } });
+      }
+    });
+    var el = document.getElementById("waffle");
+    var w = (el && el.clientWidth) || 420;
+    var cell = Math.max(8, Math.floor((w - (cols - 1) * 5) / cols));
+    c.setOption({
+      animation: ANIM, animationDuration: 600, animationEasing: "cubicOut",
+      animationDelay: function (idx) { return idx * 4; },
+      grid: { left: 0, right: 0, top: 0, bottom: 0 },
+      xAxis: { type: "value", min: -0.5, max: cols - 0.5, show: false },
+      yAxis: { type: "value", min: -0.5, max: rows - 0.5, inverse: true, show: false },
+      series: [{ type: "scatter", symbol: "rect", symbolSize: cell - 4, silent: true, data: data }]
+    }, true);
   }
 
   function buildPlants() {
     var arr = totals("drought", "m", ["hydro"]);
-    var hot = arr[2] + arr[3], total = arr.reduce(function (a, b) { return a + b; }, 0), out = "";
-    for (var i = 0; i < total; i++) out += '<i class="' + (i < hot ? "hot" : "") + '"></i>';
-    $("#plants").innerHTML = out;
+    var hot = arr[2] + arr[3], total = arr.reduce(function (a, b) { return a + b; }, 0);
+    var c = chart("plants"); if (!c) return;
+    var cols = 7, data = [];
+    for (var i = 0; i < total; i++) {
+      data.push({
+        value: [i % cols, Math.floor(i / cols)],
+        itemStyle: { color: i < hot ? CLASSCOL[3] : "rgba(233,241,248,.16)" }
+      });
+    }
+    var el = document.getElementById("plants");
+    var w = (el && el.clientWidth) || 300;
+    var cell = Math.max(10, Math.floor((w - (cols - 1) * 8) / cols));
+    c.setOption({
+      animation: ANIM, animationDuration: 600, animationDelay: function (idx) { return idx * 22; },
+      grid: { left: 0, right: 0, top: 0, bottom: 0 },
+      xAxis: { type: "value", min: -0.5, max: cols - 0.5, show: false },
+      yAxis: { type: "value", min: -0.5, max: 2.5, inverse: true, show: false },
+      series: [{ type: "scatter", symbol: "rect", symbolSize: cell - 4, silent: true, data: data }]
+    }, true);
   }
 
   function buildSolar() {
-    var rows = [["2015\u20132044", totals("heat", "s", ["solar"])], ["2041\u20132070", totals("heat", "m", ["solar"])]];
-    $("#solarbars").innerHTML = rows.map(function (r) {
-      var arr = r[1], t = arr.reduce(function (a, b) { return a + b; }, 0) || 1;
-      var bar = arr.map(function (v, i) {
-        return v ? '<i style="width:' + (v / t) * 100 + "%;background:" + CCOL[["low", "mod", "high", "crit"][i]] + '"></i>' : "";
-      }).join("");
-      return '<div class="solarrow"><span class="lbl">' + r[0] + '</span><div class="bar">' + bar + "</div></div>";
-    }).join("");
+    var near = totals("heat", "s", ["solar"]), mid = totals("heat", "m", ["solar"]);
+    var pct = function (a) {
+      var t = a.reduce(function (x, y) { return x + y; }, 0) || 1;
+      return a.map(function (v) { return Math.round((v / t) * 10000) / 100; });
+    };
+    var A = pct(mid), B = pct(near);
+    var c = chart("solarbars"); if (!c) return;
+    var names = ["Low", "Moderate", "High", "Critical"];
+    c.setOption({
+      animation: ANIM, animationDuration: 800, animationEasing: "cubicOut",
+      grid: { left: 4, right: 8, top: 8, bottom: 22, containLabel: true },
+      tooltip: { trigger: "axis", axisPointer: { type: "shadow" }, backgroundColor: "rgba(7,22,39,.94)",
+        borderColor: "rgba(142,197,255,.3)", textStyle: { color: "#E9F1F8", fontSize: 12 } },
+      xAxis: { type: "value", max: 100, axisLabel: { color: "rgba(233,241,248,.6)", fontSize: 10, formatter: "{value}%" },
+        splitLine: { lineStyle: { color: "rgba(255,255,255,.07)" } }, axisLine: { show: false } },
+      yAxis: { type: "category", data: ["2041\u20132070", "2015\u20132044"],
+        axisLabel: { color: "rgba(233,241,248,.75)", fontSize: 11 }, axisTick: { show: false }, axisLine: { show: false } },
+      series: names.map(function (n, i) {
+        return { name: n, type: "bar", stack: "risk", barWidth: 22, data: [A[i], B[i]],
+          itemStyle: { color: CLASSCOL[i], borderRadius: i === 3 ? [0, 3, 3, 0] : 0 } };
+      })
+    }, true);
   }
 
-  buildWaffle("s");
-  buildPlants();
-  buildSolar();
+  var rt;
+  window.addEventListener("resize", function () {
+    clearTimeout(rt);
+    rt = setTimeout(function () {
+      Object.keys(CHARTS).forEach(function (k) { CHARTS[k].resize(); });
+      buildWaffle(lastWf);
+    }, 160);
+  });
 
   /* ---------- parallax ---------- */
   var art = [
@@ -156,6 +223,8 @@
       if (mt) mt.textContent = "Indicative pattern of change \u00b7 " + (step.dataset.haz || "flood") + "s";
     }
     if (v === "waffle") buildWaffle(step.dataset.waffle || "s");
+    if (v === "hydro") buildPlants();
+    if (v === "solar") buildSolar();
   }
   if ("IntersectionObserver" in window) {
     var io = new IntersectionObserver(function (entries) {
