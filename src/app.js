@@ -327,7 +327,7 @@ function chipIcon(name) {
         return v ? '<div class="seg-b ' + CLS[i] + '" style="width:' + pct(v, t) + "%;background:" + COL[CLS[i]] + '"></div>' : "";
       }).join("");
       var card = document.createElement("div"); card.className = "mcard";
-      card.innerHTML = '<div class="mhead">' + m.a + '<span class="haz"><span class="dot" style="background:' + HAZCOL[m.h] + '"></span>' + HAZ[m.h].name + "</span></div>" +
+      card.innerHTML = '<div class="mhead">' + chipIcon(m.a) + "<span>" + m.a + '</span><span class="haz"><svg class="ic" aria-hidden="true" style="color:' + HAZCOL[m.h] + '"><use href="#i-' + m.h + '"/></svg>' + HAZ[m.h].name + "</span></div>" +
         '<div class="mbody"><div class="minibar">' + bar + "</div>" +
         '<p class="cap">' + fp(pct(hc(arr), t)) + " of " + m.a.toLowerCase() + " at high or critical risk, " + PER.m + "</p>" +
         "<h4>Potential impacts</h4><p>" + m.imp + "</p>" +
