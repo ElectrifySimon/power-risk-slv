@@ -92,7 +92,8 @@ def icon_sprite():
         body = re.sub(r"^.*?<svg[^>]*>", "", raw, flags=re.S)
         body = re.sub(r"</svg>\s*$", "", body, flags=re.S)
         body = re.sub(r'\s+xmlns="http://www\.w3\.org/2000/svg"', "", body)
-        out.append(f'<symbol id="i-{name}" viewBox="{vb.group(1)}">{body}</symbol>')
+        out.append(f'<symbol id="i-{name}" viewBox="{vb.group(1)}" fill="none" stroke="currentColor" '
+                   f'stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">{body}</symbol>')
     return "".join(out)
 
 

@@ -307,6 +307,62 @@
   }
   activate(steps[0]);
 
+  /* ---------- hero contour field (skill recipe: dashboard-chrome) ---------- */
+  function heroField() {
+    var cv = document.getElementById("bgfx"); if (!cv) return;
+    var ctx = cv.getContext("2d"), dpr = Math.min(window.devicePixelRatio || 1, 2);
+    var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    var W = 0, H = 0, t = 0, last = 0, raf = null, on = true;
+    var N = 26, rgb = [142, 197, 255];
+    function size() {
+      W = cv.clientWidth; H = cv.clientHeight;
+      cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+    function draw() {
+      if (!W || !H) return;
+      ctx.clearRect(0, 0, W, H);
+      var step = Math.max(2, W / 190), r = rgb[0], g = rgb[1], b = rgb[2];
+      for (var i = 0; i < N; i++) {
+        var base = (i + 0.5) / N * H, amp = 24 + 44 * Math.abs(Math.sin(i * 0.63 + 1.1));
+        var a = 0.05 + 0.09 * (0.5 + 0.5 * Math.sin(i * 0.87 + 0.4));
+        ctx.beginPath();
+        for (var x = 0; x <= W; x += step) {
+          var u = x / W;
+          var y = base
+            + Math.sin(u * 4.2 + t * 0.32 + i * 0.31) * amp * 0.52
+            + Math.sin(u * 9.4 - t * 0.21 + i * 0.17) * amp * 0.29
+            + Math.sin(u * 1.7 + t * 0.13 + i * 0.06) * amp * 0.19;
+          x ? ctx.lineTo(x, y) : ctx.moveTo(x, y);
+        }
+        ctx.strokeStyle = "rgba(" + r + "," + g + "," + b + "," + a.toFixed(3) + ")";
+        ctx.lineWidth = 1; ctx.stroke();
+      }
+    }
+    function loop(ts) {
+      if (!on) return;
+      if (ts - last > 40) { t = ts / 1000; draw(); last = ts; }
+      raf = requestAnimationFrame(loop);
+    }
+    size(); draw();
+    if (!reduced) raf = requestAnimationFrame(loop);
+    window.addEventListener("resize", function () { size(); draw(); });
+    var hero = document.querySelector(".s-hero");
+    if ("IntersectionObserver" in window && hero) {
+      new IntersectionObserver(function (es) {
+        es.forEach(function (e) {
+          on = e.isIntersecting && !document.hidden && !reduced;
+          if (on) { last = 0; raf = requestAnimationFrame(loop); } else { cancelAnimationFrame(raf); }
+        });
+      }, { threshold: 0 }).observe(hero);
+    }
+    document.addEventListener("visibilitychange", function () {
+      if (document.hidden) { on = false; cancelAnimationFrame(raf); }
+      else if (!reduced) { on = true; last = 0; raf = requestAnimationFrame(loop); }
+    });
+  }
+  heroField();
+
   /* ---------- routing ---------- */
   function route() {
     var dash = location.hash.replace("#", "") === "dashboard";
