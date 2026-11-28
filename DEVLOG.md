@@ -1,3 +1,12 @@
+## 28 November 2026 - story and dashboard pass
+
+- Hero headline was mounted by a React typewriter (`vendor/hero-react.js`). At first paint the h1 was empty, then half-written ("Power un|") for about 1.5 s, with an orange caret on a blue page, and the DOM carried three copies of the title so a screen reader read it repeatedly. Replaced with the static h1 plus one CSS reveal honouring reduced motion. Checked: full text at 0.6 s and at 3 s, one copy.
+- `id="mapramp"` existed in both `src/story.html` and `src/page.html`. `getElementById` returned the story element, so the dashboard legend never changed with the hazard. Split into `mapramp-story` and `mapramp-dash`. Checked: blue for floods, amber for droughts, red for heatwaves.
+- Phone hero: the country art started at x 86 and was 343 wide on a 390 px screen, so it ran off the edge and sat directly under the standfirst. Art now sits inside the frame at 55% opacity with the contour field at 35%, and a scrim from 34% down. Measured with the text hidden: background behind the paragraph is mean 19, sd 2.5, range 11 to 72, so the copy sits on flat dark.
+- Register: the table is 689 px wide inside a 304 px scroller at 390 px with no cue that it scrolls. Added a one-line hint below the table, shown under 760 px only.
+- Story prose checked against the tables: 10 of 19 hydropower plants at high or critical drought risk (9 + 1 in both periods) and solar moderate heat at 14% near term to 99.7% mid-century are both correct, so the hardcoded sentences stay.
+- Live check at 1440 and 390 after unlocking: title complete, no duplicate ids, document width equals viewport, KPIs 91 / 23 / 81 / 32, four tabs, 136 register rows, JSON download 43,361 bytes with 10 top-level keys, no console errors.
+
 # Devlog
 
 ## 26 November 2026 - first build
