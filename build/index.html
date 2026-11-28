@@ -349,6 +349,12 @@ footer .disclaimer{color:#5F6E7D;font-size:11.5px;line-height:1.55;max-width:98c
 .mhead .ic{width:18px;height:18px;flex:0 0 18px}
 .mhead .haz{display:inline-flex;align-items:center;gap:5px}
 .mhead .haz .ic{width:14px;height:14px;flex:0 0 14px}
+
+/* the register is 689 px wide on a 390 px phone: say that it scrolls */
+.scrollhint{display:none}
+@media (max-width:760px){
+  .scrollhint{display:block;margin:10px 2px 0;font-size:12px;line-height:1.4;color:var(--muted)}
+}
 /* Story: dark act, sticky visuals, layered parallax. */
 
 .story{position:relative;background:#071627;color:#E9F1F8;overflow-x:clip}
@@ -954,6 +960,7 @@ svg.ul-band{position:absolute;inset:0;pointer-events:none;overflow:visible;z-ind
           <tbody></tbody>
         </table>
       </div>
+      <p class="scrollhint">Swipe the table sideways for the remaining columns.</p>
       <p class="note">The two assessment windows overlap between 2041 and 2044 by design. Capacity applies to generation assets only; n/a marks asset groups where capacity is not reported.</p>
     </div>
   </section>
