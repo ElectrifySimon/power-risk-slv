@@ -121,6 +121,13 @@
   .s-hero h1{max-width:12ch}
   .waffle{gap:4px}
   .s-meta{gap:16px;font-size:11.5px}
+  /* the country art used to run off the right edge and sit under the standfirst */
+  .art-land{inset:4% 2% auto 2%;height:52%;opacity:.55}
+  .art-contours{opacity:.35}
+  .s-hero::after{content:"";position:absolute;left:0;right:0;top:34%;bottom:0;z-index:0;pointer-events:none;
+    background:linear-gradient(180deg,rgba(7,22,39,0) 0%,rgba(7,22,39,.86) 26%,rgba(7,22,39,.94) 100%)}
+  .s-hero > .hero-copy{position:relative;z-index:1}
+  .s-hero > .hero-art{z-index:0}
 }
 @media (prefers-reduced-motion:reduce){
   .art-layer{transform:none!important}
@@ -165,6 +172,11 @@ body.dashmode body.dashmode #story{display:none}
   background:linear-gradient(180deg,rgba(7,22,39,.34),rgba(7,22,39,.5) 55%,rgba(7,22,39,.6))}
 .s-hero,.scrolly,.s-cta{position:relative;z-index:2}
 #hero-title .text-type__cursor{color:#8EC5FF}
+/* Static headline. It used to be typed by a React component: the h1 was empty
+   at first paint, half-written for 1.5 s, and carried an orange caret. */
+#hero-title.hero-title-live{animation:heroIn 720ms cubic-bezier(.22,.9,.24,1) both}
+@keyframes heroIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion: reduce){#hero-title.hero-title-live{animation:none}}
 
 /* ---------- TextType ---------- */
 .text-type {

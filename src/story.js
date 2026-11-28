@@ -73,7 +73,7 @@
     Array.prototype.forEach.call(document.querySelectorAll(".swash"), function (r) {
       r.setAttribute("opacity", r.getAttribute("data-h") === haz ? "0.9" : "0");
     });
-    var ramp = $("#mapramp");
+    var ramp = $("#mapramp-story");
     if (ramp) ramp.style.background = "linear-gradient(" + (haz === "heat" ? "180deg" : "90deg") + "," + GRAD[haz].join(",") + ")";
   }
 

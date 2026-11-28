@@ -80,7 +80,7 @@
     var wash = $(".wash", $("#mapview"));
     wash.setAttribute("fill", "url(#g-" + S.haz + ")");
     wash.setAttribute("opacity", S.per === "s" ? "0.42" : "0.8");
-    var ramp = $("#mapramp"), g = GEO.grad[S.haz];
+    var ramp = $("#mapramp-dash"), g = GEO.grad[S.haz];
     if (ramp) ramp.style.background = "linear-gradient(" +
       (S.haz === "heat" ? "180deg" : "90deg") + "," + g.stops.join(",") + ")";
   }
